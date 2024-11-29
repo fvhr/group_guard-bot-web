@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    id = models.BigAutoField(primary_key=True)
+    id = models.BigIntegerField(primary_key=True)
     photo_url = models.TextField(null=True)
     fullname = models.TextField()
 
@@ -12,7 +12,7 @@ class User(AbstractUser):
 
 
 class Chat(models.Model):
-    id = models.BigAutoField(primary_key=True)
+    id = models.BigIntegerField(primary_key=True)
     title = models.CharField(max_length=255)
     description = models.TextField(null=True)
     url = models.CharField(max_length=255, null=True)
