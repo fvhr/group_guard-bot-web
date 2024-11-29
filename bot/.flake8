@@ -1,4 +1,10 @@
 [flake8]
-exclude = .git, __pycache__, venv, __init__.py,
+exclude = .git, __pycache__, venv, __init__.py
+
 import-order-style = google
-ignore = W503
+
+application-import-names = bot
+
+inline-quotes = '
+
+ignore = I100, I202, W503, I001, I005, I004, I201, I003, F811, I101
