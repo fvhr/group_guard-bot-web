@@ -1,0 +1,4 @@
+[flake8]
+exclude = .git, __pycache__, venv, __init__.py,
+import-order-style = google
+ignore = W503
