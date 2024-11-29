@@ -6,7 +6,10 @@ from . import models
 class UserSerializer(ModelSerializer):
     class Meta:
         model = models.User
-        exclude = ('groups', 'user_permissions', 'last_login', 'is_superuser', 'is_active')
+        exclude = (
+            'groups', 'user_permissions', 'last_login', 'is_superuser',
+            'is_active', 'first_name', 'last_name'
+        )
         extra_kwargs = {
             'password': {'write_only': True},
             'is_staff': {'read_only': True},

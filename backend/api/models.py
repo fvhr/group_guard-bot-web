@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     id = models.BigAutoField(primary_key=True)
-    photo_url = models.CharField(max_length=255, null=True)
+    photo_url = models.TextField(null=True)
     fullname = models.TextField()
 
     def __str__(self):
@@ -16,7 +16,7 @@ class Chat(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(null=True)
     url = models.CharField(max_length=255, null=True)
-    avatar_url = models.CharField(max_length=255, null=True)
+    avatar_url = models.TextField(null=True)
     admins = models.JSONField(null=True)
     bot_is_admin = models.BooleanField(default=False)
     objects: models.Manager
