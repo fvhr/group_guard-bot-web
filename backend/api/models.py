@@ -4,6 +4,11 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     id = models.BigAutoField(primary_key=True)
+    photo_url = models.CharField(max_length=255, null=True)
+    fullname = models.TextField()
+
+    def __str__(self):
+        return self.username
 
 
 class Chat(models.Model):
