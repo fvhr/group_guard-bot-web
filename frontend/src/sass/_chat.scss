@@ -1,0 +1,154 @@
+.chat-list-container {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f7fc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+
+  .header {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 25px 0px;
+    background-color: #202b36;
+    font-size: 2.2rem;
+    color: white;
+		position: relative;
+
+		button {
+			position: fixed;
+			top: 30px;
+			right: 0px;
+		}
+    h1 {
+      font-weight: 600;
+    }
+  }
+}
+.chat-cards {
+  width: 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .chat-card {
+    &__image {
+      display: block;
+      margin-top: auto;
+    }
+
+    &__chat-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #333;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &__description {
+      font-size: 0.9rem;
+      color: #777;
+      font-weight: 400;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .chat-list-container {
+    .header h1 {
+      font-size: 1.5rem;
+			margin-left: 60px;
+    }
+
+		.header {
+			display: flex;
+			justify-content: space-between;
+
+			button {
+				padding: 5px 12px;
+				font-size: 0.8rem;
+				top: 25px
+			}
+		}
+
+    .chat-cards {
+      width: 90%;
+      padding: 0 10px;
+    }
+
+    .chat-cards {
+      .chat-card {
+        padding: 10px;
+      }
+    }
+  }
+}
+
+.chat-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  width: 100%;
+  box-shadow: 0 0.5px 8px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  transition: 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    background: #26323f;
+    box-shadow: 0 8px 10px rgba(0, 0, 0, 0.15);
+    transition: 0.2s ease;
+  }
+
+  &__image {
+    flex-shrink: 0;
+    margin-right: 16px;
+
+    img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    &__chat-name {
+      font-weight: bold;
+      margin: 0;
+      font-size: 1.2rem;
+      color: white;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &__description {
+      margin: 4px 0 0;
+      font-size: 1rem;
+      color: #555;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.chat-card:hover .chat-card__chat-name {
+  color: white;
+}
+
+.chat-card:hover .chat-card__description {
+  color: white;
+}

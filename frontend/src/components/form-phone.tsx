@@ -2,12 +2,13 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Box, Button, FormControl, FormHelperText, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 interface PhoneFormInput {
   phone: string;
 }
 
-export const FormLogin: React.FC = () => {
+export const FormPhone: React.FC = () => {
   const {
     register,
     handleSubmit,
@@ -18,6 +19,8 @@ export const FormLogin: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [operator, setOperator] = useState<number>();
+
+	const navigate = useNavigate()
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     let value = event.target.value.replace(/\s/g, '').replace(/[^0-9]/g, '');
@@ -49,11 +52,11 @@ export const FormLogin: React.FC = () => {
 
   const onSubmit = (data: PhoneFormInput) => {
     console.log('Submitted phone:', data.phone);
+		navigate('/login-sms')
     setIsLoading(true);
 
     setTimeout(() => {
       setIsLoading(false);
-      alert('Номер телефона отправлен!');
     }, 1000);
   };
 
@@ -82,17 +85,16 @@ export const FormLogin: React.FC = () => {
               sx={{
                 '& .MuiInputLabel-root': {
                   color: 'white',
+									
                 },
                 '& .MuiInputLabel-root.Mui-focused': {
                   color: 'white',
-                },
-                '& .MuiInputLabel-root.Mui-error': {
-                  color: 'red',
                 },
 
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': {
                     borderColor: 'white',
+										borderRadius: '8px'
                   },
                   '&:hover fieldset': {
                     borderColor: 'white',
@@ -103,6 +105,7 @@ export const FormLogin: React.FC = () => {
                 },
                 '& .MuiInputBase-input::placeholder': {
                   color: 'white',
+                  fontSize: '1rem',
                   opacity: 0.8,
                 },
               }}
@@ -118,22 +121,20 @@ export const FormLogin: React.FC = () => {
             <FormHelperText style={{ marginLeft: '12px' }}>{errors.phone?.message}</FormHelperText>
           </FormControl>
         </div>
-
         <Button
           sx={{
             backgroundColor: isButtonDisabled ? 'gray' : 'white',
-            color: isButtonDisabled ? 'lightgray' : '#202020',
+            color: isButtonDisabled ? 'gray' : '#202020',
             '&.Mui-disabled': {
-              backgroundColor: 'darkgray',
               color: 'grey',
               cursor: 'not-allowed',
             },
-            fontWeight: '400',
-            fontSize: '0.9rem',
-            padding: '8px 25px',
+            fontSize: '1rem',
+            padding: '10px 30px',
+						borderRadius: '8px'
           }}
           type="submit"
-          style={{ marginTop: '30px' }}
+          style={{ marginTop: '35px' }}
           variant="contained"
           disabled={isButtonDisabled}>
           {isLoading ? 'Загрузка...' : 'Продолжить'}
