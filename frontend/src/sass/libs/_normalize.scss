@@ -91,7 +91,12 @@ input[type="number"] {
 		-moz-appearance: textfield;
 }
 body {
-	background-color: #fafafa;
+	background-image: url('../../../public/background.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+	object-fit: cover;
 	font-family: 'Montserrat';
 	font-size: 1rem;
+	box-sizing: border-box;
+	padding: 0 20px;
 }
