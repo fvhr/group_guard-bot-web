@@ -1,0 +1,49 @@
+version: "3.3"
+
+services:
+  backend:
+    build:
+      context: backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - db
+    env_file:
+      - backend/.env
+
+  nginx:
+    build:
+      context: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./backend/static:/var/www/staticfiles
+      - ./backend/media:/var/www/media
+      - letsencrypt:/etc/letsencrypt
+      - webroot:/var/www/certbot
+    depends_on:
+      - backend
+      - certbot
+
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+      - webroot:/var/www/certbot
+
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - data:/var/lib/postgresql/data
+    env_file:
+      - backend/.env
+
+volumes:
+  letsencrypt:
+  webroot:
+  data:
