@@ -11,6 +11,16 @@ class UserViewSet(ModelViewSet):
     queryset = models.User.objects.all()
     serializer_class = serializers.UserSerializer
 
+    @action(['GET'], True, 'admin-chats', 'user-admin-chats')
+    def admin_chats(self, request: Request, pk: int):
+        try:
+            pk = int(pk)
+        except ValueError:
+            return Response({'detail': 'user does not exists'}, 404)
+
+        chats = list(models.Chat.objects.filter(admins__contains=[int(pk)]).values_list('id', flat=True))
+        return Response({'chats': chats}, 200)
+
 
 class ChatViewSet(ModelViewSet):
     queryset = models.Chat.objects.all()
@@ -31,7 +41,7 @@ class PhoneViewSet(ModelViewSet):
             'number', openapi.IN_QUERY, 'phone number to check its existence', True, type=openapi.TYPE_STRING
         ),
     ])
-    @action(['GET'], False, 'exists', 'exists')
+    @action(['GET'], False, 'exists', 'phone-exists')
     def phone_exists(self, request: Request):
         number = request.query_params.get('number', None)
         if models.Phone.objects.filter(number=number):

@@ -3,17 +3,21 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    tg_id = models.BigIntegerField()
+    id = models.BigAutoField(primary_key=True)
 
 
 class Chat(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    url = models.CharField(max_length=255)
+    id = models.BigAutoField(primary_key=True)
+    title = models.CharField(max_length=255)
+    description = models.TextField(null=True)
+    url = models.CharField(max_length=255, null=True)
+    avatar_url = models.CharField(max_length=255, null=True)
+    admins = models.JSONField(null=True)
+    bot_is_admin = models.BooleanField(default=False)
     objects: models.Manager
 
     def __str__(self):
-        return self.name
+        return self.title
 
 
 class UsersChats(models.Model):
