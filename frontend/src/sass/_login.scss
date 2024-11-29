@@ -4,19 +4,22 @@
   justify-content: center;
   height: 100vh;
   color: white;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
 .form {
-  background-color: #00000073;
+  background-color: #212d3a;
   min-width: 335px;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 50px;
   border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 
   &__title {
-    margin-bottom: 40px;
+    margin-bottom: 50px;
     font-size: 1.5rem;
     font-weight: 500;
   }
@@ -34,6 +37,7 @@
     input {
       width: 100%;
       color: white;
+			
     }
   }
 
@@ -42,13 +46,61 @@
   }
 
   button:hover {
-    background-color: rgb(232, 232, 232);
+    background-color: white;
   }
+}
 
-	.MuiButton-root.Mui-disabled {
-		color: rgba(179, 179, 179, 1);
-		background-color: rgb(131, 131, 131);
-		box-shadow: none;
-		cursor: not-allowed;
+.form-inputs {
+
+	label {
+		display: block;
+		margin-bottom: 10px;
+		color: white; 
+		font-size: 1.1rem;
+	}
+
+	.sms-input {
+		width: 100%;
+		padding: 10px;
+		border-radius: 8px;
+		border: 1px solid white; 
+		background-color: transparent; 
+		color: white; 
+		font-size: 1.5rem;
+		font-weight: 600;
+		text-align: center;
+		letter-spacing: 5px;
+
+		&.error {
+			border-color: red;
+		}
+	}
+
+	.error-message {
+		color: red; 
+		margin-top: 5px;
+	}
+}
+
+.sms-button {
+	margin-top: 50px;
+	padding: 10px 30px;
+	border-radius: 8px;
+	font-size: 1.1rem;
+	background-color: rgb(255, 255, 255); 
+	color: #212d3a;
+
+	&.active {
+		background-color: white; 
+		color: #202020; 
+		cursor: pointer; 
+	}
+
+	&:disabled {
+		cursor: not-allowed; 
+	}
+	
+	&:active:not(:disabled) {
+		transform: scale(0.98); 
 	}
 }

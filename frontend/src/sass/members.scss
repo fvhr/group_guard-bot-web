@@ -1,0 +1,121 @@
+.chat-list-members {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f7fc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+
+  &__header {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #fff;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+    h1 {
+      font-size: 2.5rem;
+      color: #333;
+    }
+  }
+
+  &__chat-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+
+    img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  }
+
+  &__list {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  &__chat-back {
+    width: 15px;
+    height: 15px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+
+    .chat-list-members__avatar {
+      flex-shrink: 0;
+      margin-right: 15px;
+
+      img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+    }
+
+    .chat-list-members__name {
+      font-size: 1.2rem;
+      color: #333;
+      flex-grow: 1;
+    }
+
+    .chat-list-members__menu {
+      position: absolute;
+      right: 10px;
+      cursor: pointer;
+    }
+
+    .chat-list-members__menu-button {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #555;
+      cursor: pointer;
+    }
+
+    .chat-list-members__dropdown {
+      position: absolute;
+      top: 20px;
+      right: 0;
+      background: #fff;
+      border: 1px solid #ddd;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      width: 150px;
+      padding: 10px;
+      display: flex;
+      z-index: 1;
+      flex-direction: column;
+      gap: 10px;
+
+      button {
+        background: none;
+        border: none;
+        color: #ff4747;
+        font-size: 1rem;
+        text-align: left;
+        cursor: pointer;
+
+        &:hover {
+          color: #e03535;
+        }
+      }
+    }
+  }
+}
