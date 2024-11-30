@@ -1,3 +1,4 @@
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.request import Request
@@ -65,6 +66,49 @@ class ChatViewSet(ModelViewSet):
             instance=users, many=True
         ).data
         return Response(users, 200)
+
+    @action(['GET'], True, 'users/search', 'users-search')
+    def users_search(self, request: Request, pk):
+        query = request.query_params.get('q', None)
+        if not query:
+            data = serializers.UserSerializer(
+                models.User.objects.filter(chats__chat_id=pk), many=True
+            ).data
+            return Response(data, 200)
+
+        vector = (
+            SearchVector('first_name', weight='A') +
+            SearchVector('last_name', weight='A') +
+            SearchVector('username', weight='A')
+        )
+
+        query = SearchQuery(query)
+        rank = SearchRank(vector, query)
+
+        users = models.User.objects.annotate(
+            search=vector, rank=rank
+        ).filter(search=query, chats__chat_id=pk).order_by('-rank')
+        data = serializers.UserSerializer(users, many=True).data
+        return Response(data, 200)
+
+    @action(['GET'], True, 'search', 'users-search')
+    def search(self, request: Request, pk):
+        query = request.query_params.get('q', None)
+        if not query:
+            data = serializers.ChatSerializer(
+                models.Chat.objects.all(), many=True
+            ).data
+            return Response(data, 200)
+
+        vector = SearchVector('title', weight='A') + SearchVector('description', weight='B')
+        query = SearchQuery(query)
+        rank = SearchRank(vector, query)
+
+        chats = models.Chat.objects.annotate(
+            search=vector, rank=rank
+        ).filter(search=query).order_by('-rank')
+        data = serializers.ChatSerializer(chats, many=True).data
+        return Response(data, 200)
 
     @swagger_auto_schema(
         'PATCH',
