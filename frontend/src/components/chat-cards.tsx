@@ -15,6 +15,13 @@ export const ChatCards = () => {
     <div className="chat-cards">
       {isLoading && <div className="chat-cards__loading">{loaders}</div>}
       {error && <p className="chat-cards__error">Error: {error.message}</p>}
+      {data?.length === 0 && (
+        <div className="members__none">
+          {' '}
+          <div style={{ fontSize: '2.3rem' }}>😞</div>
+          <div>Нет чатов</div>
+        </div>
+      )}
       {data?.map((el) => (
         <ChatCard
           key={el.id}

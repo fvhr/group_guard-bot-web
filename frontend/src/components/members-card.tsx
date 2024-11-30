@@ -16,6 +16,7 @@ type Props = {
   isLoading: boolean;
   onSearch: (query: string) => void;
   searchQuery: string;
+	countMembers: number
 };
 
 export const ChatListMembers: React.FC<Props> = ({
@@ -26,6 +27,7 @@ export const ChatListMembers: React.FC<Props> = ({
   loaders,
   onSearch,
   searchQuery,
+	countMembers
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState<number | null>(null);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -42,7 +44,7 @@ export const ChatListMembers: React.FC<Props> = ({
 
     setTimeout(() => {
       setAlertMessage(null);
-    }, 2000);
+    }, 1000);
   };
 
   const handleRemoveFromAllChats = () => {
@@ -57,7 +59,8 @@ export const ChatListMembers: React.FC<Props> = ({
   const handleCloseAlert = () => {
     setAlertMessage(null);
   };
-
+	console.log(alertMessage);
+	
   return (
     <>
       {alertMessage && (
@@ -85,7 +88,7 @@ export const ChatListMembers: React.FC<Props> = ({
           <img src={chatInfo?.avatar_url} alt="Chat" />
           <div className="members__chat-image">
             <div>{chatInfo?.title}</div>
-            <span>{members.length} участников</span>
+            <span>{countMembers} участников</span>
           </div>
         </div>
       </div>
@@ -97,10 +100,10 @@ export const ChatListMembers: React.FC<Props> = ({
         {isLoading && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>{loaders}</div>
         )}
-        {members.length === 0 && (
+        {members.length === 0 && !isLoading && (
           <div className="members__none">
             {' '}
-            <div style={{fontSize: '2.3rem'}}>😞</div>
+            <div style={{ fontSize: '2.3rem' }}>😞</div>
             <div>Нет результатов</div>
           </div>
         )}

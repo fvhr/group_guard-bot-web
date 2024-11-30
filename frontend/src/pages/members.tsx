@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { debounce } from 'lodash';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getCurrentChat, getUsersChat, searchChatMembers } from '../api/chats';
 import { ChatListMembers, SkeletonLoader } from '../components/index';
@@ -11,6 +11,8 @@ export const ChatMembers: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [debouncedQuery, setDebouncedQuery] = useState<string>('');
+  const [countNumber, setCountNumber] = useState(0);
+	const [isCountSet, setIsCountSet] = useState<boolean>(false); 
 
   const debouncedSearch = useCallback(
     debounce((query: string) => {
@@ -45,6 +47,13 @@ export const ChatMembers: React.FC = () => {
     refetchOnWindowFocus: false,
   });
 
+  useEffect(() => {
+    if (!membersLoading && !isCountSet) {
+      setCountNumber(members.length);
+      setIsCountSet(true); 
+    }
+  }, [membersLoading, members.length, isCountSet]);
+
   const isLoading = membersLoading || chatLoading;
   const error = membersError || chatError;
 
@@ -60,6 +69,7 @@ export const ChatMembers: React.FC = () => {
         members={members}
         onSearch={handleSearchChange}
         searchQuery={searchQuery}
+        countMembers={countNumber}
       />
     </div>
   );
