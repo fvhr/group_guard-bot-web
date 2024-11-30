@@ -3,7 +3,7 @@ import { FormSms } from '../components/index';
 
 export const LoginSms: React.FC = () => {
   return (
-    <div className="wrapper__forms">
+    <div className="wrapper">
       <FormSms />
     </div>
   );

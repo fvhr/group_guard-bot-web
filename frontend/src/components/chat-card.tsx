@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface IChatCardProps {
   chatName: string;
@@ -7,8 +8,9 @@ interface IChatCardProps {
 }
 
 export const ChatCard: React.FC<IChatCardProps> = ({ chatName, description, imageUrl }) => {
+  const navigate = useNavigate();
   return (
-    <div className="chat-card">
+    <div onClick={() => navigate('/chats-members')} className="chat-card">
       <div className="chat-card__image">
         <img src={imageUrl} alt={chatName} />
       </div>

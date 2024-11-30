@@ -1,6 +1,6 @@
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Box, Button, FormControl, FormHelperText, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,14 +13,14 @@ export const FormPhone: React.FC = () => {
     register,
     handleSubmit,
     setValue,
-    setFocus,
     formState: { errors },
   } = useForm<PhoneFormInput>();
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useState('+7');
   const [isLoading, setIsLoading] = useState(false);
   const [operator, setOperator] = useState<number>();
 
-	const navigate = useNavigate()
+  const navigate = useNavigate();
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     let value = event.target.value.replace(/\s/g, '').replace(/[^0-9]/g, '');
@@ -47,15 +47,18 @@ export const FormPhone: React.FC = () => {
     setValue('phone', '+7');
     setPhone('');
     setOperator(undefined);
-    setFocus('phone');
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
   const onSubmit = (data: PhoneFormInput) => {
     console.log('Submitted phone:', data.phone);
-		navigate('/login-sms')
+
     setIsLoading(true);
 
     setTimeout(() => {
+      navigate('/login-sms');
       setIsLoading(false);
     }, 1000);
   };
@@ -64,55 +67,59 @@ export const FormPhone: React.FC = () => {
     phone.length !== 16 || (operator !== undefined && (operator < 900 || operator > 997));
 
   return (
-    <div className="form form__login">
+    <div className="form">
       <div className="form__title">Авторизация</div>
       <Box
         className="form__block"
         onSubmit={handleSubmit(onSubmit)}
         component="form"
-        sx={{ '& .MuiTextField-root': { m: 1.5, width: '35ch' } }}
+        sx={{ '& .MuiTextField-root': { width: '35ch' } }}
         autoComplete="off">
         <div className="form-inputs">
           <FormControl fullWidth error={!!errors.phone}>
+            <div className="form__label">Номер телефона</div>
             <TextField
-              label="Номер телефона"
               value={phone}
               {...register('phone', { required: 'Введите номер телефона' })}
               onChange={handleInput}
               placeholder="+7"
               autoComplete="off"
+              inputRef={inputRef}
               error={!!errors.phone}
               sx={{
                 '& .MuiInputLabel-root': {
-                  color: 'white',
-									
+                  color: '#212d3a',
                 },
                 '& .MuiInputLabel-root.Mui-focused': {
-                  color: 'white',
+                  color: '#212d3a',
                 },
-
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': {
-                    borderColor: 'white',
-										borderRadius: '8px'
+                    borderColor: '#212d3a',
+                    borderRadius: '8px',
                   },
                   '&:hover fieldset': {
-                    borderColor: 'white',
+                    borderColor: '#212d3a',
                   },
                   '&.Mui-focused fieldset': {
-                    borderColor: 'white',
+                    borderColor: '#212d3a',
                   },
                 },
+                '& .MuiInputBase-input': {
+                  fontSize: '1.25rem',
+                  color: '#212d3a',
+                  height: '2ch',
+                },
                 '& .MuiInputBase-input::placeholder': {
-                  color: 'white',
-                  fontSize: '1rem',
+                  color: '#212d3a',
+                  fontSize: '1.25rem',
                   opacity: 0.8,
                 },
               }}
               InputProps={{
                 endAdornment: phone.length > 3 && (
                   <HighlightOffIcon
-                    style={{ cursor: 'pointer', color: 'white' }}
+                    style={{ cursor: 'pointer', color: '#212d3a' }}
                     onClick={handleLabelClick}
                   />
                 ),
@@ -123,15 +130,15 @@ export const FormPhone: React.FC = () => {
         </div>
         <Button
           sx={{
-            backgroundColor: isButtonDisabled ? 'gray' : 'white',
-            color: isButtonDisabled ? 'gray' : '#202020',
+            backgroundColor: isButtonDisabled ? 'gray' : '#212d3a',
+            color: isButtonDisabled ? 'gray' : 'white',
             '&.Mui-disabled': {
               color: 'grey',
               cursor: 'not-allowed',
             },
             fontSize: '1rem',
             padding: '10px 30px',
-						borderRadius: '8px'
+            borderRadius: '8px',
           }}
           type="submit"
           style={{ marginTop: '35px' }}

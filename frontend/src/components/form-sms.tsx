@@ -1,8 +1,9 @@
+import { Box, Button, FormControl, FormHelperText, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-interface PhoneFormInput {
+interface SmsFormInput {
   sms: string;
 }
 
@@ -12,8 +13,7 @@ export const FormSms: React.FC = () => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<PhoneFormInput>();
-
+  } = useForm<SmsFormInput>();
   const [sms, setSms] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,49 +21,101 @@ export const FormSms: React.FC = () => {
 
   const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value.replace(/\D/g, '');
-
     if (value.length <= 4) {
       setSms(value);
       setValue('sms', value);
     }
   };
 
-  const onSubmit = (data: PhoneFormInput) => {
-    console.log('Submitted SMS code:', data.sms);
-    navigate('/chats');
+  const onSubmit = (data: SmsFormInput) => {
+    console.log('Submitted SMS:', data.sms);
 
     setIsLoading(true);
-
     setTimeout(() => {
+      navigate('/chats');
       setIsLoading(false);
     }, 1000);
   };
 
+  const isButtonDisabled = sms.length !== 4;
+
   return (
-    <div className="form form__login">
+    <div className="form">
       <div className="form__title">Авторизация</div>
-
-      <form onSubmit={handleSubmit(onSubmit)} className="form__block" autoComplete="off">
+      <Box
+        className="form__block"
+        onSubmit={handleSubmit(onSubmit)}
+        component="form"
+        sx={{ '& .MuiTextField-root': { width: '25ch' } }}
+        autoComplete="off">
         <div className="form-inputs">
-          <label htmlFor="sms">СМС - код</label>
-          <input
-            id="sms"
-            type="text"
-            value={sms}
-            {...register('sms', { required: 'Введите код', maxLength: 4 })}
-            onChange={handleInput}
-            className={`sms-input ${errors.sms ? 'error' : ''}`}
-          />
-          {errors.sms && <p className="error-message">{errors.sms.message}</p>}
+          <FormControl fullWidth error={!!errors.sms}>
+            <div className="form__label">SMS-код</div>
+            <TextField
+              value={sms}
+              {...register('sms', {
+                required: 'SMS-код',
+              })}
+              onChange={handleInput}
+              placeholder="XXXX"
+              autoComplete="off"
+              error={!!errors.sms}
+              inputProps={{
+                maxLength: 4,
+                style: {
+                  textAlign: 'center',
+                  fontSize: '1.5rem',
+                  letterSpacing: '15px',
+                  marginLeft: '13px',
+                },
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#212d3a',
+                    borderRadius: '8px',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#212d3a',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#212d3a',
+                  },
+                },
+                '& .MuiInputBase-input': {
+                  color: '#212d3a',
+                  height: '2.2ch',
+                },
+                '& .MuiInputBase-input::placeholder': {
+                  color: '#212d3a',
+                  opacity: 0.8,
+                  letterSpacing: '15px',
+                  fontSize: '1.3rem',
+                },
+              }}
+            />
+            <FormHelperText style={{ marginLeft: '12px' }}>{errors.sms?.message}</FormHelperText>
+          </FormControl>
         </div>
-
-        <button
+        <Button
+          sx={{
+            backgroundColor: isButtonDisabled ? 'gray' : '#212d3a',
+            color: isButtonDisabled ? 'gray' : 'white',
+            '&.Mui-disabled': {
+              color: 'grey',
+              cursor: 'not-allowed',
+            },
+            fontSize: '1rem',
+            padding: '8px 30px',
+            borderRadius: '8px',
+          }}
           type="submit"
-          className={`sms-button ${sms.length === 4 ? 'active' : ''}`}
-          disabled={sms.length !== 4 || isLoading}>
+          style={{ marginTop: '35px' }}
+          variant="contained"
+          disabled={isButtonDisabled}>
           {isLoading ? 'Загрузка...' : 'Войти'}
-        </button>
-      </form>
+        </Button>
+      </Box>
     </div>
   );
 };
