@@ -134,7 +134,7 @@ class ChatViewSet(ModelViewSet):
     @action(['POST'], True, 'check-user', 'check-user-in-chat')
     def check_user_in_chat(self, request: Request, pk):
         if not models.User.objects.filter(id=request.data.get('id')):
-            serializer = self.serializer_class(request.data)
+            serializer = self.serializer_class(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
 
