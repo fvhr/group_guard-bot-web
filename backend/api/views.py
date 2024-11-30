@@ -24,6 +24,13 @@ class UserViewSet(ModelViewSet):
         chats = list(models.Chat.objects.filter(admins__contains=[pk]).values_list('id', flat=True))
         return Response(chats, 200)
 
+    @action(['POST'], True, 'bulk-delete', 'user-bulk-delete')
+    def bulk_delete(self, request: Request, pk):
+        chats_ids = request.data.get('chat_ids', [])
+        user = self.get_object()
+        models.UsersChats.objects.filter(user=user, chat__in=chats_ids).delete()
+        return Response(status=204)
+
 
 class ChatViewSet(ModelViewSet):
     queryset = models.Chat.objects.all()
@@ -37,18 +44,21 @@ class ChatViewSet(ModelViewSet):
         return Response({'members': users, 'admins': chat.admins})
 
     @swagger_auto_schema('POST', request_body=openapi.Schema(
-        type=openapi.TYPE_ARRAY,
-        items=openapi.TYPE_INTEGER
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'user_ids': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.TYPE_INTEGER)
+        }
     ), responses={
         200: openapi.Response('success', serializers.UsersChatsSerializer(many=True))
     })
     @action(['POST'], True, 'bulk-add', 'users-chats-bulk-add')
     def bulk_create(self, request: Request, pk: int):
+        user_ids = request.data.get('user_ids', [])
         chat = self.get_object()
         users_chats = models.UsersChats.objects.bulk_create([
-            models.UsersChats(user=user_id, chat=chat) for user_id in request.data
+            models.UsersChats(user_id=user_id, chat=chat) for user_id in user_ids
         ])
-        data = serializers.UserSerializer(instance=users_chats, many=True)
+        data = serializers.UsersChatsSerializer(instance=users_chats, many=True).data
         return Response(data, 200)
 
 
