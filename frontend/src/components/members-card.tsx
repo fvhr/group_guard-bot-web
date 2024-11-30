@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import circleSvg from '../assets/circle-user.svg';
 import { ChatType } from '../types/chat';
 import { Member } from '../types/members';
 import { AlertComponent } from './alert';
 import { MenuMembers } from './members-menu';
+import tg from '../assets/tg.png';
 
 type Props = {
   members: Member[];
@@ -100,13 +102,13 @@ export const ChatListMembers: React.FC<Props> = ({
                 {member.user.photo_url.startsWith('https') ? (
                   <img src={member.user.photo_url} />
                 ) : (
-                  <img src="../../public/circle-user.svg" alt="Дефолт картинка" />
+                  <img src={circleSvg} alt="Дефолт картинка" />
                 )}
               </div>
               <div className="members__data">
                 <div className="members__name">
                   {member.user.first_name}
-                  {member.user.is_premium && <img src="../../public/tg.png" alt="" />}
+                  {member.user.is_premium && <img src={tg} alt="" />}
                 </div>
                 <Link to={`https://t.me/${member.user.username}`}>
                   <span className="members__username">@{member.user.username}</span>
