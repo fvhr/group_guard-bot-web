@@ -71,13 +71,19 @@ class ChatViewSet(ModelViewSet):
 
     @swagger_auto_schema('GET', manual_parameters=[
         openapi.Parameter('q', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
-    ])
+    ], responses={
+        200: serializers.UsersChatsWithUserSerializer(many=True)
+    })
     @action(['GET'], True, 'users/search', 'users-search')
     def users_search(self, request: Request, pk):
         query = request.query_params.get('q', None)
         if not query:
-            data = serializers.UserSerializer(
+            users = serializers.UserSerializer(
                 models.User.objects.filter(chats__chat_id=pk), many=True
+            ).data
+            data = serializers.UsersChatsWithUserSerializer(
+                models.UsersChats.objects.filter(user__in=users),
+                many=True
             ).data
             return Response(data, 200)
 
@@ -139,6 +145,11 @@ class ChatViewSet(ModelViewSet):
 
     @swagger_auto_schema(
         'PATCH',
+        manual_parameters=[
+            openapi.Parameter(
+                'user_id', openapi.IN_QUERY, required=True, type=openapi.TYPE_INTEGER
+            )
+        ],
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties={'is_admin': openapi.Schema(type=openapi.TYPE_BOOLEAN)},
@@ -159,6 +170,19 @@ class ChatViewSet(ModelViewSet):
             instance=models.UsersChats.objects.get(user_id=user_id, chat_id=pk)
         ).data
         return Response(data, 200)
+
+    @swagger_auto_schema('DELETE', manual_parameters=[
+        openapi.Parameter('user_id', openapi.IN_QUERY, type=openapi.TYPE_INTEGER)
+    ], responses={
+        204: ''
+    })
+    @action(['DELETE'], True, 'delete-user', 'delete-user')
+    def delete_user_from_chat(self, request: Request, pk):
+        models.UsersChats.objects.filter(
+            user_id=request.query_params.get('user_id'),
+            chat_id=pk
+        ).delete()
+        return Response(status=204)
 
     @swagger_auto_schema(
         'POST',
