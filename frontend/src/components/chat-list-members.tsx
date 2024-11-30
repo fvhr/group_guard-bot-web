@@ -2,14 +2,24 @@ import { Alert } from '@mui/material';
 import { CheckIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IChatListMembersProps } from '../types/members';
+import { ChatType } from '../types/chat';
+import { User } from '../types/members';
 import { MenuMembers } from './menu-members';
 
-export const ChatListMembers: React.FC<IChatListMembersProps> = ({
-  chatName,
-  chatMembersCount,
-  chatImageUrl,
+type Props = {
+  members: User[];
+  error: Error | null;
+  chatInfo: ChatType | undefined;
+  loaders: JSX.Element[];
+  isLoading: boolean;
+};
+
+export const ChatListMembers: React.FC<Props> = ({
+  chatInfo,
   members,
+  isLoading,
+  error,
+  loaders,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState<number | null>(null);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -46,7 +56,7 @@ export const ChatListMembers: React.FC<IChatListMembersProps> = ({
     <>
       {alertMessage && (
         <Alert
-          icon={<CheckIcon fontSize="inherit" style={{ color: 'white' }} />}
+          icon={<CheckIcon fontSize="inherit" style={{ color: 'green' }} />}
           severity="success"
           onClose={handleCloseAlert}
           style={{
@@ -55,8 +65,8 @@ export const ChatListMembers: React.FC<IChatListMembersProps> = ({
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 1000,
-            background: '#414d5a',
-            color: 'white',
+            border: '1px solid green',
+            color: 'green',
           }}>
           {alertMessage}
         </Alert>
@@ -77,16 +87,22 @@ export const ChatListMembers: React.FC<IChatListMembersProps> = ({
             <path d="M9 14 4 9l5-5" />
             <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11" />
           </svg>
-          Назад
+          <div className="chat-list-members__back-text">Назад</div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-          <img src={chatImageUrl} alt="Chat" />
+          <img src={chatInfo?.avatar_url} alt="Chat" />
           <div className="chat-list-members__chat-image">
-            <div>{chatName}</div>
-            <span>{chatMembersCount} участников</span>
+            <div>{chatInfo?.title}</div>
+            <span>{members.length} участников</span>
           </div>
         </div>
       </div>
+      {isLoading && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '600px' }}>
+          {loaders}
+        </div>
+      )}
+      {error && <p>Error: {error.message}</p>}
 
       <div className="chat-list-members__list">
         {members.map((member) => (
@@ -96,9 +112,12 @@ export const ChatListMembers: React.FC<IChatListMembersProps> = ({
             key={member.id}>
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
               <div className="chat-list-members__avatar">
-                <img src={member.avatarUrl} alt={member.name} />
+                <img src={member.photo_url} alt={member.username} />
               </div>
-              <div className="chat-list-members__name">{member.name}</div>
+              <div className="chat-list-members__data">
+                <div className="chat-list-members__name">{member.first_name}</div>
+                <span className="chat-list-members__username">{member.username}</span>
+              </div>
             </div>
 
             <div className="chat-list-members__role">владелец</div>

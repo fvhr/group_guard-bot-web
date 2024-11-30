@@ -1,27 +1,47 @@
+import { useQuery } from '@tanstack/react-query';
 import React from 'react';
-import { ChatListMembers } from '../components/index';
-
-const members = [
-  {
-    id: 1,
-    name: 'Какой-то мужик с рандомюзерапи',
-    avatarUrl: 'https://randomuser.me/api/portraits/men/75.jpg',
-  },
-  {
-    id: 2,
-    name: 'Какая-то баба с рандомюзерапи',
-    avatarUrl: 'https://randomuser.me/api/portraits/women/45.jpg',
-  },
-];
+import { useParams } from 'react-router-dom';
+import { getCurrentChat, getUsersChat } from '../api/chats';
+import { ChatListMembers, SkeletonLoader } from '../components/index';
+import { ChatType } from '../types/chat';
+import { User } from '../types/members';
 
 export const ChatMembers: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+
+  const {
+    data: members,
+    error: membersError,
+    isLoading: membersLoading,
+  } = useQuery<User[], Error>({
+    queryKey: ['users-chat', id],
+    queryFn: () => getUsersChat(id!),
+    enabled: !!id,
+  });
+
+  const {
+    data: chatInfo,
+    error: chatError,
+    isLoading: chatLoading,
+  } = useQuery<ChatType, Error>({
+    queryKey: ['chat-info', id],
+    queryFn: () => getCurrentChat(id!),
+    enabled: !!id,
+  });
+
+  const isLoading = membersLoading || chatLoading;
+  const error = membersError || chatError;
+
+  const loaders = Array.from({ length: 6 }, (_, index) => <SkeletonLoader key={index} />);
+
   return (
     <div className="chat-list-members">
       <ChatListMembers
-        chatImageUrl="https://randomuser.me/api/portraits/men/35.jpg"
-        chatMembersCount={555}
-        chatName="ИмяЧатаКрутого"
-        members={members}
+        isLoading={isLoading}
+        error={error}
+        chatInfo={chatInfo}
+        loaders={loaders}
+        members={members || []}
       />
     </div>
   );

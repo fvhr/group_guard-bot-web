@@ -1,12 +1,7 @@
-export interface IMember {
+export interface User {
   id: number;
-  name: string;
-  avatarUrl: string;
-}
-
-export interface IChatListMembersProps {
-  chatName: string;
-  chatMembersCount: number;
-  chatImageUrl: string;
-  members: IMember[];
+  username: string;
+  first_name: string;
+  is_staff: boolean;
+  photo_url: string;
 }

@@ -1,7 +1,7 @@
 .chat-list-members {
   font-family: 'Arial', sans-serif;
-  background-color: #f4f7fc;
   display: flex;
+  background-color: #f4f7fc;
   flex-direction: column;
   align-items: center;
   height: 100vh;
@@ -45,7 +45,7 @@
 
     div {
       font-size: 1.6rem;
-			font-weight: 600;
+      font-weight: 600;
     }
 
     span {
@@ -91,9 +91,22 @@
       }
     }
 
-    .chat-list-members__name {
-      font-size: 1.2rem;
-      color: white;
+    .chat-list-members__data {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      div {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: white;
+      }
+
+      span {
+        font-size: 1rem;
+        color: rgb(195, 195, 195);
+        font-weight: 400;
+      }
     }
 
     @media (max-width: 767px) {
@@ -167,12 +180,7 @@
 
     &__back {
       position: static;
-			font-size: 1.2rem;
-
-      svg {
-        width: 22px;
-        height: 22px;
-      }
+      font-size: 1.2rem;
     }
 
     img {
@@ -201,6 +209,10 @@
     &__header {
       justify-content: space-between;
       padding: 25px 20px;
+    }
+
+    &__back-text {
+      display: none;
     }
   }
 }
