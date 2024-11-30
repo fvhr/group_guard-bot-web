@@ -48,6 +48,20 @@ class ChatViewSet(ModelViewSet):
         users = serializers.UserSerializer(instance=users, many=True).data
         return Response(users, 200)
 
+    @action(['PATCH'], True, 'update-is-admin')
+    def update_is_admin(self, request: Request, pk):
+        user_id = request.query_params.get('user_id', None)
+        if user_id is None:
+            return Response({'detail': 'user does not exists'})
+
+        models.UsersChats.objects.filter(user_id=user_id, chat_id=pk)\
+            .update(is_admin=request.data.get('is_admin', False))
+
+        data = serializers.UsersChatsSerializer(
+            instance=models.UsersChats.objects.get(user_id=user_id, chat_id=pk)
+        ).data
+        return Response(data, 200)
+
     @swagger_auto_schema('POST', request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={
