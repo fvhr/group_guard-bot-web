@@ -36,6 +36,21 @@ class ChatViewSet(ModelViewSet):
         users = self.serializer_class(instance=users, many=True).data
         return Response({'members': users, 'admins': chat.admins})
 
+    @swagger_auto_schema('POST', request_body=openapi.Schema(
+        type=openapi.TYPE_ARRAY,
+        items=openapi.TYPE_INTEGER
+    ), responses={
+        200: openapi.Response('success', serializers.UsersChatsSerializer(many=True))
+    })
+    @action(['POST'], True, 'bulk-add', 'users-chats-bulk-add')
+    def bulk_create(self, request: Request, pk: int):
+        chat = self.get_object()
+        users_chats = models.UsersChats.objects.bulk_create([
+            models.UsersChats(user=user_id, chat=chat) for user_id in request.data
+        ])
+        data = serializers.UserSerializer(instance=users_chats, many=True)
+        return Response(data, 200)
+
 
 class UsersChatsViewSet(ModelViewSet):
     queryset = models.UsersChats.objects.all()

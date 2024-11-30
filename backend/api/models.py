@@ -5,7 +5,6 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     id = models.BigIntegerField(primary_key=True)
     photo_url = models.TextField(null=True)
-    fullname = models.TextField()
     username = models.CharField(max_length=150, null=True)
     is_premium = models.BooleanField(default=False)
 
