@@ -1,5 +1,5 @@
 import { ChatType } from '../types/chat';
-import { User } from '../types/members';
+import { Member } from '../types/members';
 import { axiosInstanсe } from './instance';
 
 export const getChats = async (): Promise<ChatType[]> => {
@@ -12,7 +12,7 @@ export const getCurrentChat = async (id: string): Promise<ChatType> => {
   return response.data;
 };
 
-export const getUsersChat = async (id: string): Promise<User[]> => {
-  const response = await axiosInstanсe.get<User[]>(`chats/${id}/users/`);
+export const getUsersChat = async (id: string): Promise<Member[]> => {
+  const response = await axiosInstanсe.get<Member[]>(`chats/${id}/users/`);
   return response.data;
 };

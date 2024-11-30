@@ -10,7 +10,7 @@ export const MenuMembers: React.FC<MenuProps> = ({
   handleRemoveFromAllChats,
 }) => {
   return (
-    <div className="chat-list-members__dropdown">
+    <div className="members__dropdown">
       <button onClick={() => handleRemoveFromChat()}>Удалить из этого чата</button>
       <button onClick={() => handleRemoveFromAllChats()}>Удалить из всех чатов</button>
     </div>

@@ -1,7 +1,12 @@
-export interface User {
+export interface Member {
+  user: User;
+  is_admin: boolean;
+}
+
+type User = {
   id: number;
   username: string;
   first_name: string;
-  is_staff: boolean;
   photo_url: string;
-}
+  is_premium: boolean;
+};

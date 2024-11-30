@@ -1,7 +1,6 @@
-export { TelegramLoginButton } from './button-telegram';
+export { AlertComponent } from './alert';
 export { ChatCard } from './chat-card';
-export { ChatListMembers } from './chat-list-members';
-export { FormPhone } from './form-phone';
-export { FormSms } from './form-sms';
-export { MenuMembers } from './menu-members';
+export { ChatCards } from './chat-cards';
+export { ChatListMembers } from './members-card';
+export { MenuMembers } from './members-menu';
 export { SkeletonLoader } from './skeleton';
