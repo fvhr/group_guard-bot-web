@@ -6,7 +6,8 @@ from loader import settings
 from shemas import AvatarUserInfo
 
 logging.basicConfig(
-    level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s'
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
 )
 
 
@@ -81,9 +82,41 @@ class InteractionBackendAPI:
                 return False
 
     @classmethod
-    async def change_admin_status(cls, chat_id: int, user_id: int, is_admin: bool) -> None:
+    async def change_admin_status(
+        cls,
+        chat_id: int,
+        user_id: int,
+        is_admin: bool,
+    ) -> None:
         endpoint = f'{cls.BASE_URL}/chats/{chat_id}/update-is-admin/'
         async with aiohttp.ClientSession() as session:
-            async with session.patch(endpoint, params={'user_id': user_id},
-                                     json={'is_admin': is_admin}) as response:
+            async with session.patch(
+                endpoint,
+                params={'user_id': user_id},
+                json={'is_admin': is_admin},
+            ) as response:
                 logging.info(f'patch from {endpoint}: {response.status}')
+
+    @classmethod
+    async def check_user_is_admin(cls, user_id: int) -> dict:
+        endpoint = f'{cls.BASE_URL}/users/{user_id}/admin-chats/'
+        async with aiohttp.ClientSession() as session:
+            async with session.get(endpoint) as response:
+                logging.info(f'get from {endpoint}: {response.status}')
+                return await response.json()
+
+    @classmethod
+    async def get_users_chat(cls, chat_id: str) -> dict:
+        endpoint = f'{cls.BASE_URL}/chats/{chat_id}/users/'
+        async with aiohttp.ClientSession() as session:
+            async with session.get(endpoint) as response:
+                logging.info(f'get from {endpoint}: {response.status}')
+                return await response.json()
+
+    @classmethod
+    async def get_chat(cls, chat_id: str) -> dict:
+        endpoint = f'{cls.BASE_URL}/chats/{chat_id}/'
+        async with aiohttp.ClientSession() as session:
+            async with session.get(endpoint) as response:
+                logging.info(f'get from {endpoint}: {response.status}')
+                return await response.json()
