@@ -7,8 +7,13 @@ class UserSerializer(ModelSerializer):
     class Meta:
         model = models.User
         exclude = (
-            'groups', 'user_permissions', 'last_login',
-            'is_active', 'is_staff', 'is_superuser', 'password',
+            'groups',
+            'user_permissions',
+            'last_login',
+            'is_active',
+            'is_staff',
+            'is_superuser',
+            'password',
         )
         extra_kwargs = {
             'date_joined': {'read_only': True},

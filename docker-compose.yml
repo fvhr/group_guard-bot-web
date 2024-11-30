@@ -20,7 +20,7 @@ services:
       - "3000:3000"
       - "5173:5173"
     volumes:
-      - build:/app/build
+      - ./build:/app/dist
 
   nginx:
     build:
@@ -29,11 +29,11 @@ services:
       - "80:80"
       - "443:443"
     volumes:
+      - ./build:/var/www/build
       - ./backend/static:/var/www/staticfiles
       - ./backend/media:/var/www/media
       - letsencrypt:/etc/letsencrypt
       - webroot:/var/www/certbot
-      - build:/var/www/build
     depends_on:
       - backend
       - frontend
@@ -58,4 +58,3 @@ volumes:
   letsencrypt:
   webroot:
   data:
-  build:
