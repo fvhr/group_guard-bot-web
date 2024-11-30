@@ -11,6 +11,9 @@ class UserViewSet(ModelViewSet):
     queryset = models.User.objects.all()
     serializer_class = serializers.UserSerializer
 
+    @swagger_auto_schema('GET', responses={
+        200: serializers.ChatSerializer(many=True),
+    })
     @action(['GET'], True, 'admin-chats', 'user-admin-chats')
     def admin_chats(self, request: Request, pk: int):
         try:
@@ -18,13 +21,20 @@ class UserViewSet(ModelViewSet):
         except ValueError:
             return Response({'detail': 'user does not exists'}, 404)
 
-        chats = list(models.Chat.objects.filter(admins__contains=[int(pk)]).values_list('id', flat=True))
-        return Response({'chats': chats}, 200)
+        chats = list(models.Chat.objects.filter(admins__contains=[pk]).values_list('id', flat=True))
+        return Response(chats, 200)
 
 
 class ChatViewSet(ModelViewSet):
     queryset = models.Chat.objects.all()
     serializer_class = serializers.ChatSerializer
+
+    @action(['GET'], True, 'users', 'chat-users')
+    def users(self, request: Request, pk: int):
+        chat = self.get_object()
+        users = chat.users.all()
+        users = self.serializer_class(instance=users, many=True).data
+        return Response({'members': users, 'admins': chat.admins})
 
 
 class UsersChatsViewSet(ModelViewSet):
@@ -40,7 +50,10 @@ class PhoneViewSet(ModelViewSet):
         openapi.Parameter(
             'number', openapi.IN_QUERY, 'phone number to check its existence', True, type=openapi.TYPE_STRING
         ),
-    ])
+    ], responses={
+        200: '{"exists": True}',
+        404: '{"exists": False}',
+    })
     @action(['GET'], False, 'exists', 'phone-exists')
     def phone_exists(self, request: Request):
         number = request.query_params.get('number', None)

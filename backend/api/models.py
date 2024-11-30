@@ -6,6 +6,11 @@ class User(AbstractUser):
     id = models.BigIntegerField(primary_key=True)
     photo_url = models.TextField(null=True)
     fullname = models.TextField()
+    username = models.CharField(max_length=150, null=True)
+    is_premium = models.BooleanField(default=False)
+
+    USERNAME_FIELD = 'id'
+    REQUIRED_FIELDS = ['fullname']
 
     def __str__(self):
         return self.username
@@ -26,8 +31,8 @@ class Chat(models.Model):
 
 
 class UsersChats(models.Model):
-    user_id = models.ForeignKey(User, models.CASCADE, 'chats')
-    chat_id = models.ForeignKey(Chat, models.CASCADE, 'users')
+    user = models.ForeignKey(User, models.CASCADE, 'chats')
+    chat = models.ForeignKey(Chat, models.CASCADE, 'users')
     objects: models.Manager
 
 

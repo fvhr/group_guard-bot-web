@@ -1,20 +1,29 @@
 from rest_framework.serializers import ModelSerializer
 
-from . import models
+from . import models, utils
 
 
 class UserSerializer(ModelSerializer):
     class Meta:
         model = models.User
         exclude = (
-            'groups', 'user_permissions', 'last_login', 'is_superuser',
-            'is_active', 'first_name', 'last_name'
+            'groups', 'user_permissions', 'last_login', 'is_active',
+            'first_name', 'last_name', 'password',
         )
         extra_kwargs = {
-            'password': {'write_only': True},
             'is_staff': {'read_only': True},
+            'is_superuser': {'read_only': True},
             'date_joined': {'read_only': True},
         }
+
+    def create(self, validated_data: dict):
+        validated_data['password'] = utils.generate_password()
+        return models.User.objects.create_user(
+            validated_data.pop('username'),
+            validated_data.pop('email'),
+            validated_data.pop('password'),
+            **validated_data
+        )
 
 
 class ChatSerializer(ModelSerializer):
