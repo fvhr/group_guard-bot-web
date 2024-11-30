@@ -1,13 +1,12 @@
-import { Alert } from '@mui/material';
-import { CheckIcon } from 'lucide-react';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ChatType } from '../types/chat';
-import { User } from '../types/members';
-import { MenuMembers } from './menu-members';
+import { Member } from '../types/members';
+import { AlertComponent } from './alert';
+import { MenuMembers } from './members-menu';
 
 type Props = {
-  members: User[];
+  members: Member[];
   error: Error | null;
   chatInfo: ChatType | undefined;
   loaders: JSX.Element[];
@@ -31,7 +30,7 @@ export const ChatListMembers: React.FC<Props> = ({
   };
 
   const handleRemoveFromChat = () => {
-    setAlertMessage('Удален из чата');
+    setAlertMessage(`Удален из чата ${chatInfo?.title}`);
     setIsMenuOpen(null);
 
     setTimeout(() => {
@@ -40,7 +39,7 @@ export const ChatListMembers: React.FC<Props> = ({
   };
 
   const handleRemoveFromAllChats = () => {
-    setAlertMessage('Удален из чатов');
+    setAlertMessage('Удален из всех чатов');
     setIsMenuOpen(null);
 
     setTimeout(() => {
@@ -55,24 +54,10 @@ export const ChatListMembers: React.FC<Props> = ({
   return (
     <>
       {alertMessage && (
-        <Alert
-          icon={<CheckIcon fontSize="inherit" style={{ color: 'green' }} />}
-          severity="success"
-          onClose={handleCloseAlert}
-          style={{
-            position: 'absolute',
-            bottom: '80px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 1000,
-            border: '1px solid green',
-            color: 'green',
-          }}>
-          {alertMessage}
-        </Alert>
+        <AlertComponent handleCloseAlert={handleCloseAlert} alertMessage={alertMessage} />
       )}
-      <div className="chat-list-members__header">
-        <div onClick={() => navigate('/chats')} className="chat-list-members__back">
+      <div className="members__header">
+        <div onClick={() => navigate('/chats')} className="members__back">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="32"
@@ -87,41 +72,50 @@ export const ChatListMembers: React.FC<Props> = ({
             <path d="M9 14 4 9l5-5" />
             <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11" />
           </svg>
-          <div className="chat-list-members__back-text">Назад</div>
+          <div className="members__back-text">Назад</div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
           <img src={chatInfo?.avatar_url} alt="Chat" />
-          <div className="chat-list-members__chat-image">
+          <div className="members__chat-image">
             <div>{chatInfo?.title}</div>
             <span>{members.length} участников</span>
           </div>
         </div>
       </div>
-      {isLoading && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '600px' }}>
-          {loaders}
-        </div>
-      )}
-      {error && <p>Error: {error.message}</p>}
 
-      <div className="chat-list-members__list">
+      {error && <p className="members__error">Error: {error.message}</p>}
+
+      <div className="members__list">
+        {isLoading && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>{loaders}</div>
+        )}
         {members.map((member) => (
           <div
-            onClick={() => toggleMenu(member.id)}
-            className="chat-list-members__item"
-            key={member.id}>
-            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-              <div className="chat-list-members__avatar">
-                <img src={member.photo_url} alt={member.username} />
+            onClick={() => toggleMenu(member.user.id)}
+            className={`members__item ${!member.is_admin ? 'members__item-active' : ''}`}
+            style={{ cursor: member.is_admin ? 'default' : 'pointer' }}
+            key={member.user.id}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div className="members__avatar">
+                {member.user.photo_url.startsWith('https') ? (
+                  <img src={member.user.photo_url} />
+                ) : (
+                  <img src="../../public/circle-user.svg" alt="Дефолт картинка" />
+                )}
               </div>
-              <div className="chat-list-members__data">
-                <div className="chat-list-members__name">{member.first_name}</div>
-                <span className="chat-list-members__username">{member.username}</span>
+              <div className="members__data">
+                <div className="members__name">
+                  {member.user.first_name}
+                  {member.user.is_premium && <img src="../../public/tg.png" alt="" />}
+                </div>
+                <Link to={`https://t.me/${member.user.username}`}>
+                  <span className="members__username">@{member.user.username}</span>
+                </Link>
               </div>
             </div>
+            {member.is_admin && <div className="members__role">админ</div>}
 
-            <div className="chat-list-members__role">владелец</div>
-            {isMenuOpen === member.id && (
+            {isMenuOpen === member.user.id && !member.is_admin && (
               <MenuMembers
                 handleRemoveFromChat={handleRemoveFromChat}
                 handleRemoveFromAllChats={handleRemoveFromAllChats}

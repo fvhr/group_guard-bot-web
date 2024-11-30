@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { getCurrentChat, getUsersChat } from '../api/chats';
 import { ChatListMembers, SkeletonLoader } from '../components/index';
 import { ChatType } from '../types/chat';
-import { User } from '../types/members';
+import { Member } from '../types/members';
 
 export const ChatMembers: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -13,7 +13,7 @@ export const ChatMembers: React.FC = () => {
     data: members,
     error: membersError,
     isLoading: membersLoading,
-  } = useQuery<User[], Error>({
+  } = useQuery<Member[], Error>({
     queryKey: ['users-chat', id],
     queryFn: () => getUsersChat(id!),
     enabled: !!id,
@@ -35,7 +35,7 @@ export const ChatMembers: React.FC = () => {
   const loaders = Array.from({ length: 6 }, (_, index) => <SkeletonLoader key={index} />);
 
   return (
-    <div className="chat-list-members">
+    <div className="members">
       <ChatListMembers
         isLoading={isLoading}
         error={error}
