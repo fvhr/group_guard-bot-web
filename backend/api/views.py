@@ -91,8 +91,8 @@ class ChatViewSet(ModelViewSet):
         data = serializers.UserSerializer(users, many=True).data
         return Response(data, 200)
 
-    @action(['GET'], True, 'search', 'users-search')
-    def search(self, request: Request, pk):
+    @action(['GET'], False, 'search', 'search')
+    def search(self, request: Request):
         query = request.query_params.get('q', None)
         if not query:
             data = serializers.ChatSerializer(
@@ -109,6 +109,18 @@ class ChatViewSet(ModelViewSet):
         ).filter(search=query).order_by('-rank')
         data = serializers.ChatSerializer(chats, many=True).data
         return Response(data, 200)
+
+    @action(['POST'], True, 'check-user', 'check-user-in-chat')
+    def check_user_in_chat(self, request: Request, pk):
+        if not models.User.objects.filter(id=request.data.get('id')):
+            serializer = self.serializer_class(request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
+        models.UsersChats.objects.get_or_create(
+            user_id=request.data.get('id'), chat_id=pk
+        )
+        return Response(status=204)
 
     @swagger_auto_schema(
         'PATCH',
