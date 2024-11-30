@@ -12,4 +12,8 @@ if __name__ == '__main__':
     from aiogram import executor
     from handlers import dp
 
-    executor.start_polling(dp, on_startup=on_startup)
+    allowed_updates = ['message', 'chat_member', 'my_chat_member']
+
+    executor.start_polling(
+        dp, on_startup=on_startup, allowed_updates=allowed_updates,
+    )
