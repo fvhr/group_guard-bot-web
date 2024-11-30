@@ -4,6 +4,12 @@ import { ChatCard } from '../components/chat-card';
 
 export const Chat = () => {
   const navigate = useNavigate();
+
+  // const [chats, setChats] = useState<Chat[]>([]);
+
+  // useEffect(() => {
+
+  // }, [])
   return (
     <div className="chat-list-container">
       <div className="header">

@@ -1,3 +1,4 @@
-export * from './LoginPhone';
-export * from './LoginSms';
-export * from './ChatMembers';
+export * from './chat-members';
+export * from './login-phone';
+export * from './login-sms';
+export * from './login-telegram'
