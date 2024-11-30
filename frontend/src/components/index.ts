@@ -4,3 +4,4 @@ export { ChatCards } from './chat-cards';
 export { ChatListMembers } from './members-card';
 export { MenuMembers } from './members-menu';
 export { SkeletonLoader } from './skeleton';
+export { MembersSearch } from './members-search';

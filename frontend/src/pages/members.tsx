@@ -1,21 +1,36 @@
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
+import { debounce } from 'lodash';
+import React, { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getCurrentChat, getUsersChat } from '../api/chats';
+import { getCurrentChat, getUsersChat, searchChatMembers } from '../api/chats';
 import { ChatListMembers, SkeletonLoader } from '../components/index';
 import { ChatType } from '../types/chat';
 import { Member } from '../types/members';
 
 export const ChatMembers: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [debouncedQuery, setDebouncedQuery] = useState<string>('');
+
+  const debouncedSearch = useCallback(
+    debounce((query: string) => {
+      setDebouncedQuery(query);
+    }, 500),
+    [],
+  );
+
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+    debouncedSearch(query);
+  };
 
   const {
-    data: members,
+    data: members = [],
     error: membersError,
     isLoading: membersLoading,
   } = useQuery<Member[], Error>({
-    queryKey: ['users-chat', id],
-    queryFn: () => getUsersChat(id!),
+    queryKey: ['users-chat', id, debouncedQuery],
+    queryFn: () => (debouncedQuery ? searchChatMembers(id!, debouncedQuery) : getUsersChat(id!)),
     enabled: !!id,
   });
 
@@ -27,6 +42,7 @@ export const ChatMembers: React.FC = () => {
     queryKey: ['chat-info', id],
     queryFn: () => getCurrentChat(id!),
     enabled: !!id,
+    refetchOnWindowFocus: false,
   });
 
   const isLoading = membersLoading || chatLoading;
@@ -41,7 +57,9 @@ export const ChatMembers: React.FC = () => {
         error={error}
         chatInfo={chatInfo}
         loaders={loaders}
-        members={members || []}
+        members={members}
+        onSearch={handleSearchChange}
+        searchQuery={searchQuery}
       />
     </div>
   );
