@@ -44,7 +44,7 @@ class ChatViewSet(ModelViewSet):
 
     @action(['GET'], True, 'users', 'chat-users')
     def users(self, request: Request, pk: int):
-        users = self.get_object().users.all()
+        users = models.User.objects.filter(chats__chat_id=pk)
         users = serializers.UserSerializer(instance=users, many=True).data
         return Response(users, 200)
 

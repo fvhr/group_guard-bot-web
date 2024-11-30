@@ -6,7 +6,7 @@ class APITestCase(TestCase):
     def setUp(self) -> None:
         self.url = 'http://localhost/api/'
 
-        self.user1 = User.objects.create_user('u1', None, 'u1', id=1)
+        self.user1 = User.objects.create_user('u1', None, 'u1', id=1, is_premium=True)
         self.user2 = User.objects.create_user('u2', None, 'u2', id=2)
 
         self.chat1 = Chat.objects.create(id=-1, title='c1')
@@ -54,4 +54,4 @@ class APITestCase(TestCase):
         UsersChats.objects.create(user=self.user2, chat=self.chat1, is_admin=False)
 
         rsp = self.client.get(f'{self.url}chats/-1/users/')
-        print(rsp.data)
+        print("users ", rsp.data)
