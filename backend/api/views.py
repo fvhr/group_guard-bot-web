@@ -21,7 +21,7 @@ class UserViewSet(ModelViewSet):
         except ValueError:
             return Response({'detail': 'user does not exists'}, 404)
 
-        chats = list(models.Chat.objects.filter(admins__contains=[pk]).values_list('id', flat=True))
+        chats = list(models.UsersChats.objects.filter(user_id=pk, is_admin=True).values_list('chat_id', flat=True))
         return Response(chats, 200)
 
     @swagger_auto_schema('POST', request_body=openapi.Schema(
@@ -44,10 +44,9 @@ class ChatViewSet(ModelViewSet):
 
     @action(['GET'], True, 'users', 'chat-users')
     def users(self, request: Request, pk: int):
-        chat = self.get_object()
-        users = chat.users.all()
-        users = self.serializer_class(instance=users, many=True).data
-        return Response({'members': users, 'admins': chat.admins})
+        users = self.get_object().users.all()
+        users = serializers.UserSerializer(instance=users, many=True).data
+        return Response(users, 200)
 
     @swagger_auto_schema('POST', request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,

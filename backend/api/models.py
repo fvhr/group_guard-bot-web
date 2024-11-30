@@ -20,7 +20,6 @@ class Chat(models.Model):
     description = models.TextField(null=True)
     url = models.CharField(max_length=255, null=True)
     avatar_url = models.TextField(null=True)
-    admins = models.JSONField(null=True)
     bot_is_admin = models.BooleanField(default=False)
     objects: models.Manager
 
@@ -31,6 +30,7 @@ class Chat(models.Model):
 class UsersChats(models.Model):
     user = models.ForeignKey(User, models.CASCADE, 'chats')
     chat = models.ForeignKey(Chat, models.CASCADE, 'users')
+    is_admin = models.BooleanField(default=False)
     objects: models.Manager
 
 
