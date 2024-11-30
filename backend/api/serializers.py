@@ -7,11 +7,10 @@ class UserSerializer(ModelSerializer):
     class Meta:
         model = models.User
         exclude = (
-            'groups', 'user_permissions', 'last_login', 'is_active', 'password',
+            'groups', 'user_permissions', 'last_login',
+            'is_active', 'is_staff', 'is_superuser', 'password',
         )
         extra_kwargs = {
-            # 'is_staff': {'read_only': True},
-            # 'is_superuser': {'read_only': True},
             'date_joined': {'read_only': True},
         }
 
@@ -35,6 +34,14 @@ class UsersChatsSerializer(ModelSerializer):
     class Meta:
         model = models.UsersChats
         fields = '__all__'
+
+
+class UsersChatsWithUserSerializer(ModelSerializer):
+    user = UserSerializer()
+
+    class Meta:
+        model = models.UsersChats
+        fields = ('user', 'is_admin')
 
 
 class PhoneSerializer(ModelSerializer):

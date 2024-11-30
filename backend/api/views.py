@@ -21,7 +21,9 @@ class UserViewSet(ModelViewSet):
         except ValueError:
             return Response({'detail': 'user does not exists'}, 404)
 
-        chats = list(models.UsersChats.objects.filter(user_id=pk, is_admin=True).values_list('chat_id', flat=True))
+        chats = models.UsersChats.objects.filter(user_id=pk, is_admin=True).values_list('chat', flat=True)
+        chats = models.Chat.objects.filter(id__in=chats)
+        chats = serializers.ChatSerializer(instance=chats, many=True).data
         return Response(chats, 200)
 
     @swagger_auto_schema('POST', request_body=openapi.Schema(
@@ -44,10 +46,18 @@ class ChatViewSet(ModelViewSet):
 
     @action(['GET'], True, 'users', 'chat-users')
     def users(self, request: Request, pk: int):
-        users = models.User.objects.filter(chats__chat_id=pk)
-        users = serializers.UserSerializer(instance=users, many=True).data
+        users = models.UsersChats.objects.filter(chat_id=pk).select_related('user')
+        users = serializers.UsersChatsWithUserSerializer(instance=users, many=True).data
         return Response(users, 200)
 
+    @swagger_auto_schema('PATCH', request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'is_admin': openapi.Schema(type=openapi.TYPE_BOOLEAN)
+        }
+    ), responses={
+        200: serializers.UserSerializer()
+    })
     @action(['PATCH'], True, 'update-is-admin')
     def update_is_admin(self, request: Request, pk):
         user_id = request.query_params.get('user_id', None)
