@@ -5,7 +5,7 @@ from modules import ManageMemberAction
 
 
 @dp.chat_member_handler(
-    lambda update: update.new_chat_member.status == 'administrator'
+    lambda update: update.new_chat_member.status == 'administrator',
 )
 async def give_admin_rights(update: ChatMemberUpdated):
     user = update.new_chat_member.user

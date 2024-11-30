@@ -9,4 +9,8 @@ async def change_group(call: types.CallbackQuery):
     ikb = await create_change_group(chat_id)
     chat_id = call.message.chat.id
     message_id = call.message.message_id
-    await bot.edit_message_reply_markup(chat_id=chat_id, message_id=message_id, reply_markup=ikb)
+    await bot.edit_message_reply_markup(
+        chat_id=chat_id,
+        message_id=message_id,
+        reply_markup=ikb,
+    )

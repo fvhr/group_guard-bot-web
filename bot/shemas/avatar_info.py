@@ -14,7 +14,7 @@ class AvatarInfo(BaseModel):
             file = await bot.get_file(chat.photo.big_file_id)
             file_path = file.file_path
             avatar_url = (
-                f"{settings.BASE_API_TG_URL}{settings.BOT_TOKEN}/{file_path}"
+                f'{settings.BASE_API_TG_URL}{settings.BOT_TOKEN}/{file_path}'
             )
         else:
             avatar_url = settings.BASE_AVATAR_PATH

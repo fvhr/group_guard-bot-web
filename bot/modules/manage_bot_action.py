@@ -39,7 +39,7 @@ class ManageBotAction:
             if not await InteractionBackendAPI.exist_user(user.user.id):
                 await InteractionBackendAPI.user_create(dict(user.user))
             await InteractionBackendAPI.user_chats_create(
-                {'user': user.user.id, 'chat': chat.id, 'is_admin': True}
+                {'user': user.user.id, 'chat': chat.id, 'is_admin': True},
             )
 
     @staticmethod
@@ -54,7 +54,11 @@ class ManageBotAction:
             user = await bot.get_chat_member(chat_id=chat.id, user_id=admin)
             if not await InteractionBackendAPI.exist_user(user.user.id):
                 await InteractionBackendAPI.user_create(dict(user.user))
-            await InteractionBackendAPI.change_admin_status(chat.id, user.user.id, is_admin=True)
+            await InteractionBackendAPI.change_admin_status(
+                chat.id,
+                user.user.id,
+                is_admin=True,
+            )
         await InteractionBackendAPI.chats_patch(
             chat.id,
             fields={

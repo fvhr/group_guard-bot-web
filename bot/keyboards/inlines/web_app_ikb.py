@@ -1,4 +1,8 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
+from aiogram.types import (
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+    WebAppInfo,
+)
 
 from loader import settings
 
@@ -7,8 +11,8 @@ inline_webapp_kb = InlineKeyboardMarkup(
         [
             InlineKeyboardButton(
                 text='Управление чатами',
-                web_app=WebAppInfo(url=settings.WEB_APP_URL)
-            )
-        ]
-    ]
+                web_app=WebAppInfo(url=settings.WEB_APP_URL),
+            ),
+        ],
+    ],
 )

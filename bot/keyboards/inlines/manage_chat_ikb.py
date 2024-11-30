@@ -7,12 +7,12 @@ async def create_manage_chat_ikb(chat_id: str) -> InlineKeyboardMarkup:
             [
                 InlineKeyboardButton(
                     text='Изменение группы⚙️',
-                    callback_data=f'change_group_{chat_id}'
+                    callback_data=f'change_group_{chat_id}',
                 ),
                 InlineKeyboardButton(
                     text='Удаление участника❌',
-                    callback_data=f'delete_member_{chat_id}'
+                    callback_data=f'delete_member_{chat_id}',
                 ),
-            ]
-        ]
+            ],
+        ],
     )
