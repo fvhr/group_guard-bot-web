@@ -24,6 +24,12 @@ class UserViewSet(ModelViewSet):
         chats = list(models.Chat.objects.filter(admins__contains=[pk]).values_list('id', flat=True))
         return Response(chats, 200)
 
+    @swagger_auto_schema('POST', request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'chat_ids': openapi.Schema(type=openapi.TYPE_ARRAY, items=openapi.TYPE_INTEGER)
+        }
+    ))
     @action(['POST'], True, 'bulk-delete', 'user-bulk-delete')
     def bulk_delete(self, request: Request, pk):
         chats_ids = request.data.get('chat_ids', [])

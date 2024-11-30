@@ -10,15 +10,15 @@ class UserSerializer(ModelSerializer):
             'groups', 'user_permissions', 'last_login', 'is_active', 'password',
         )
         extra_kwargs = {
-            'is_staff': {'read_only': True},
-            'is_superuser': {'read_only': True},
+            # 'is_staff': {'read_only': True},
+            # 'is_superuser': {'read_only': True},
             'date_joined': {'read_only': True},
         }
 
     def create(self, validated_data: dict):
         validated_data['password'] = utils.generate_password()
         return models.User.objects.create_user(
-            validated_data.pop('username', None),
+            validated_data.pop('username', ' '),
             validated_data.pop('email', None),
             validated_data.pop('password', None),
             **validated_data

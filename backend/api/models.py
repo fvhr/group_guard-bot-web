@@ -9,7 +9,6 @@ class User(AbstractUser):
     is_premium = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'id'
-    REQUIRED_FIELDS = ['fullname']
 
     def __str__(self):
         return self.username
