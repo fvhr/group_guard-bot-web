@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import circleSvg from '../assets/circle-user.svg';
+import tg from '../assets/tg.png';
 import { ChatType } from '../types/chat';
 import { Member } from '../types/members';
 import { AlertComponent } from './alert';
 import { MenuMembers } from './members-menu';
-import tg from '../assets/tg.png';
+import { MembersSearch } from './members-search';
 
 type Props = {
   members: Member[];
@@ -13,6 +14,8 @@ type Props = {
   chatInfo: ChatType | undefined;
   loaders: JSX.Element[];
   isLoading: boolean;
+  onSearch: (query: string) => void;
+  searchQuery: string;
 };
 
 export const ChatListMembers: React.FC<Props> = ({
@@ -21,6 +24,8 @@ export const ChatListMembers: React.FC<Props> = ({
   isLoading,
   error,
   loaders,
+  onSearch,
+  searchQuery,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState<number | null>(null);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -84,12 +89,20 @@ export const ChatListMembers: React.FC<Props> = ({
           </div>
         </div>
       </div>
+      <MembersSearch onSearch={onSearch} searchTerm={searchQuery} />
 
       {error && <p className="members__error">Error: {error.message}</p>}
 
       <div className="members__list">
         {isLoading && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>{loaders}</div>
+        )}
+        {members.length === 0 && (
+          <div className="members__none">
+            {' '}
+            <div style={{fontSize: '2.3rem'}}>😞</div>
+            <div>Нет результатов</div>
+          </div>
         )}
         {members.map((member) => (
           <div
