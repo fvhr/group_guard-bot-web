@@ -1,0 +1,65 @@
+$ellipse-color: rgb(219, 70, 159, 0.5);
+$vertical-ellipse-color: rgba(4, 58, 138, 0.7);
+$blur-amount: 50px;
+$ellipse-width: 300px;
+$ellipse-height: 200px;
+$position-offset: 150px;
+$bottom-position-offset: 80%;
+$top-offset: 20%;
+$vertical-top-offset: 0%;
+$bottom-top-offset: 70%;
+
+.ellipses-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  overflow-x: hidden;
+
+  &__left {
+    width: $ellipse-width;
+    height: $ellipse-height;
+    top: $top-offset;
+    left: -$position-offset;
+  }
+
+  &__right {
+    width: $ellipse-width;
+    height: $ellipse-height;
+    top: $top-offset;
+    right: -$position-offset;
+  }
+
+  &__top {
+    width: $ellipse-width;
+    height: $ellipse-height;
+    top: $vertical-top-offset;
+    left: -$position-offset;
+  }
+
+  &__bottom {
+    width: $ellipse-width;
+    height: $ellipse-height;
+    top: $bottom-top-offset;
+    left: $bottom-position-offset;
+  }
+
+  .ellipse {
+    position: absolute;
+    background: $ellipse-color;
+    border-radius: 50%;
+    filter: blur($blur-amount);
+    z-index: -1;
+
+    &__top {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur($blur-amount);
+      z-index: -1;
+      background: $vertical-ellipse-color;
+    }
+  }
+}
