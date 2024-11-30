@@ -19,3 +19,6 @@ class Settings:
     BASE_API_BACKEND_URL: str = field(
         default_factory=lambda: env('BASE_API_BACKEND_URL'),
     )
+    WEB_APP_URL: str = field(
+        default_factory=lambda: env('WEB_APP_URL'),
+    )

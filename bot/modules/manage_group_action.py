@@ -20,5 +20,6 @@ class ManageGroupAction:
     @staticmethod
     async def change_name_group(chat: Chat) -> None:
         await InteractionBackendAPI.chats_patch(
-            chat.id, fields={'id': chat.id, 'title': chat.title}
+            chat.id,
+            fields={'id': chat.id, 'title': chat.title},
         )

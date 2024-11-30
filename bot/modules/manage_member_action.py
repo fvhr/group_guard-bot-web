@@ -6,14 +6,18 @@ class ManageMemberAction:
     async def add_member_in_chat(member: dict, chat_id: int) -> None:
         await InteractionBackendAPI.user_create(member)
         await InteractionBackendAPI.user_chats_create(
-            data={'user': member['id'], 'chat': chat_id}
+            data={'user': member['id'], 'chat': chat_id},
         )
 
     @staticmethod
     async def give_member_admin_rights(user: dict, chat_id: int) -> None:
         if not await InteractionBackendAPI.exist_user(user['id']):
             await InteractionBackendAPI.user_create(user)
-        await InteractionBackendAPI.change_admin_status(chat_id, user['id'], is_admin=True)
+        await InteractionBackendAPI.change_admin_status(
+            chat_id,
+            user['id'],
+            is_admin=True,
+        )
 
     @staticmethod
     async def kicked_member_chat(member: dict) -> None:
@@ -23,4 +27,8 @@ class ManageMemberAction:
     async def remove_member_admin_rights(user: dict, chat_id: int) -> None:
         if not await InteractionBackendAPI.exist_user(user['id']):
             await InteractionBackendAPI.user_create(user)
-        await InteractionBackendAPI.change_admin_status(chat_id, user['id'], is_admin=False)
+        await InteractionBackendAPI.change_admin_status(
+            chat_id,
+            user['id'],
+            is_admin=False,
+        )
