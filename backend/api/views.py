@@ -57,16 +57,21 @@ class ChatViewSet(ModelViewSet):
     queryset = models.Chat.objects.all()
     serializer_class = serializers.ChatSerializer
 
+    @swagger_auto_schema('GET', responses={
+        200: serializers.UsersChatsWithUserSerializer(many=True)
+    })
     @action(['GET'], True, 'users', 'chat-users')
     def users(self, request: Request, pk: int):
-        users = models.UsersChats.objects.filter(chat_id=pk).select_related(
-            'user'
-        )
+        users = models.UsersChats.objects.filter(chat_id=pk)\
+            .select_related('user')
         users = serializers.UsersChatsWithUserSerializer(
             instance=users, many=True
         ).data
         return Response(users, 200)
 
+    @swagger_auto_schema('GET', manual_parameters=[
+        openapi.Parameter('q', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
+    ])
     @action(['GET'], True, 'users/search', 'users-search')
     def users_search(self, request: Request, pk):
         query = request.query_params.get('q', None)
@@ -88,9 +93,15 @@ class ChatViewSet(ModelViewSet):
         users = models.User.objects.annotate(
             search=vector, rank=rank
         ).filter(search=query, chats__chat_id=pk).order_by('-rank')
-        data = serializers.UserSerializer(users, many=True).data
+        data = serializers.UsersChatsWithUserSerializer(
+            models.UsersChats.objects.filter(user__in=users),
+            many=True
+        ).data
         return Response(data, 200)
 
+    @swagger_auto_schema('GET', manual_parameters=[
+        openapi.Parameter('q', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
+    ])
     @action(['GET'], False, 'search', 'search')
     def search(self, request: Request):
         query = request.query_params.get('q', None)
@@ -110,6 +121,10 @@ class ChatViewSet(ModelViewSet):
         data = serializers.ChatSerializer(chats, many=True).data
         return Response(data, 200)
 
+    @swagger_auto_schema(
+        'POST', request_body=serializers.UserSerializer(),
+        responses={204: ''}
+    )
     @action(['POST'], True, 'check-user', 'check-user-in-chat')
     def check_user_in_chat(self, request: Request, pk):
         if not models.User.objects.filter(id=request.data.get('id')):

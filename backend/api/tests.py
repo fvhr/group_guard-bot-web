@@ -78,5 +78,7 @@ class APITestCase(TestCase):
         self.assertEqual(rsp.data['is_admin'], new_is_admin)
 
     def test_chats_search(self):
-        rsp = self.client.get(f'{self.url}chats/-1/search/?q=c1')
+        UsersChats.objects.create(user=self.user1, chat=self.chat1)
+        UsersChats.objects.create(user=self.user2, chat=self.chat1)
+        rsp = self.client.get(f'{self.url}chats/-1/users/search/?q=u1')
         print(rsp.data)
