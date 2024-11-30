@@ -18,9 +18,9 @@ class UserSerializer(ModelSerializer):
     def create(self, validated_data: dict):
         validated_data['password'] = utils.generate_password()
         return models.User.objects.create_user(
-            validated_data.pop('username'),
-            validated_data.pop('email'),
-            validated_data.pop('password'),
+            validated_data.pop('username', None),
+            validated_data.pop('email', None),
+            validated_data.pop('password', None),
             **validated_data
         )
 
