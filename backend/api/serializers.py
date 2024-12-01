@@ -1,4 +1,3 @@
-from django.db import IntegrityError
 from rest_framework.serializers import ModelSerializer
 
 from . import models, utils
