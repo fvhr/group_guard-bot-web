@@ -7,5 +7,5 @@ from modules import ManageBotAction
 
 @dp.my_chat_member_handler(GroupCustomFilters.REMOVE_BOT_IN_CHAT)
 async def add_bot_in_chat(update: types.ChatMemberUpdated):
-    chat = await bot.get_chat(update.chat.id)
+    chat = update.chat
     await ManageBotAction.remove_bot_in_chat(chat)
