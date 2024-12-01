@@ -11,7 +11,6 @@ class UserSerializer(ModelSerializer):
             'user_permissions',
             'last_login',
             'is_active',
-            'is_staff',
             'is_superuser',
             'password',
         )
