@@ -6,7 +6,7 @@
   &__error {
     font-size: 1.5rem;
     text-align: center;
-    color: green;
+    color: rgb(90, 90, 90);
     margin-top: 40px;
   }
 
@@ -14,7 +14,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 30px;
     padding: 20px 0px;
     background-color: #111d3a;
     font-size: 1rem;
@@ -49,7 +49,14 @@
     div {
       font-size: 1.6rem;
       font-weight: 600;
+			
     }
+
+		@media (max-width: 560px) {
+			div {
+				max-width: 150px;
+			}
+		}
 
     span {
       color: #b8b8b8;
@@ -63,6 +70,22 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+  }
+
+  &__chat-default {
+    background-color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+
+		span {
+			color: #333;
+		}
   }
 
   &__inputs {

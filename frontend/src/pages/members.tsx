@@ -12,12 +12,12 @@ export const ChatMembers: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [debouncedQuery, setDebouncedQuery] = useState<string>('');
   const [countNumber, setCountNumber] = useState(0);
-	const [isCountSet, setIsCountSet] = useState<boolean>(false); 
+  const [isCountSet, setIsCountSet] = useState<boolean>(false);
 
   const debouncedSearch = useCallback(
     debounce((query: string) => {
       setDebouncedQuery(query);
-    }, 500),
+    }, 300),
     [],
   );
 
@@ -32,9 +32,16 @@ export const ChatMembers: React.FC = () => {
     isLoading: membersLoading,
   } = useQuery<Member[], Error>({
     queryKey: ['users-chat', id, debouncedQuery],
-    queryFn: () => (debouncedQuery ? searchChatMembers(id!, debouncedQuery) : getUsersChat(id!)),
+    queryFn: () =>
+      debouncedQuery.trim() ? searchChatMembers(id!, debouncedQuery) : getUsersChat(id!),
     enabled: !!id,
   });
+
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setDebouncedQuery('');
+    }
+  }, [searchQuery]);
 
   const {
     data: chatInfo,
@@ -44,13 +51,12 @@ export const ChatMembers: React.FC = () => {
     queryKey: ['chat-info', id],
     queryFn: () => getCurrentChat(id!),
     enabled: !!id,
-    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
     if (!membersLoading && !isCountSet) {
       setCountNumber(members.length);
-      setIsCountSet(true); 
+      setIsCountSet(true);
     }
   }, [membersLoading, members.length, isCountSet]);
 
