@@ -251,31 +251,3 @@ class ChatViewSet(ModelViewSet):
 class UsersChatsViewSet(ModelViewSet):
     queryset = models.UsersChats.objects.all()
     serializer_class = serializers.UsersChatsSerializer
-
-
-class PhoneViewSet(ModelViewSet):
-    queryset = models.Phone.objects.all()
-    serializer_class = serializers.PhoneSerializer
-
-    @swagger_auto_schema(
-        'GET',
-        manual_parameters=[
-            openapi.Parameter(
-                'number',
-                openapi.IN_QUERY,
-                'phone number to check its existence',
-                True,
-                type=openapi.TYPE_STRING,
-            ),
-        ],
-        responses={
-            200: '{"exists": True}',
-            404: '{"exists": False}',
-        },
-    )
-    @action(['GET'], False, 'exists', 'phone-exists')
-    def phone_exists(self, request: Request):
-        number = request.query_params.get('number', None)
-        if models.Phone.objects.filter(number=number):
-            return Response({'exists': True}, 200)
-        return Response({'exists': False}, 404)

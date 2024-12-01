@@ -32,11 +32,3 @@ class UsersChats(models.Model):
     chat = models.ForeignKey(Chat, models.CASCADE, 'users')
     is_admin = models.BooleanField(default=False)
     objects: models.Manager
-
-
-class Phone(models.Model):
-    number = models.CharField(max_length=20)
-    objects: models.Manager
-
-    def __str__(self):
-        return self.number

@@ -46,9 +46,3 @@ class UsersChatsWithUserSerializer(ModelSerializer):
     class Meta:
         model = models.UsersChats
         fields = ('user', 'is_admin')
-
-
-class PhoneSerializer(ModelSerializer):
-    class Meta:
-        model = models.Phone
-        fields = '__all__'
