@@ -31,6 +31,8 @@ export const MemberCard = ({ member, setAlertMessage, chatInfo }: Props) => {
       chat_id: chatId,
     };
 
+    console.log(JSON.stringify(dataToSend));
+
     try {
       // Проверка, доступен ли Telegram WebApp API
       if (window.Telegram && window.Telegram.WebApp) {
@@ -43,7 +45,7 @@ export const MemberCard = ({ member, setAlertMessage, chatInfo }: Props) => {
         setAlertMessage(
           chatId === 'all'
             ? `Пользователь удалён из всех чатов`
-            : `Пользователь удалён из чата с ID ${chatId}`
+            : `Пользователь удалён из чата с ID ${chatId}`,
         );
       } else {
         console.error('Telegram WebApp API не доступен');
@@ -66,11 +68,10 @@ export const MemberCard = ({ member, setAlertMessage, chatInfo }: Props) => {
       onClick={() => toggleMenu(member.user.id)}
       className={`members__item ${!member.is_admin ? 'members__item-active' : ''}`}
       style={{ cursor: member.is_admin ? 'default' : 'pointer' }}
-      key={member.user.id}
-    >
+      key={member.user.id}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <div className="members__avatar">
-          {member.user.photo_url !== null ? (
+          {member.user.photo_url !== null && member.user.photo_url.startsWith('https') ? (
             <img src={member.user.photo_url} alt="Фото пользователя" />
           ) : (
             <img src={circleSvg} alt="Дефолт картинка" />
@@ -90,9 +91,7 @@ export const MemberCard = ({ member, setAlertMessage, chatInfo }: Props) => {
 
       {isMenuOpen === member.user.id && !member.is_admin && (
         <MenuMembers
-          handleRemoveFromChat={() =>
-            handleRemoveFromChat(member.user.id, chatInfo?.id || 'all')
-          }
+          handleRemoveFromChat={() => handleRemoveFromChat(member.user.id, chatInfo?.id || 'all')}
           handleRemoveFromAllChats={() => handleRemoveFromChat(member.user.id, 'all')}
         />
       )}
