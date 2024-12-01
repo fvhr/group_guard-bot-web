@@ -58,7 +58,6 @@ class ManageBotAction:
             if not user.user.is_bot:
                 if not await InteractionBackendAPI.exist_user(user.user.id):
                     await InteractionBackendAPI.user_create(dict(user.user))
-                print(user.user)
                 await InteractionBackendAPI.change_admin_status(
                     chat.id,
                     user.user.id,

@@ -1,18 +1,17 @@
 from aiogram.types import (
-    InlineKeyboardMarkup,
-    InlineKeyboardButton,
-    WebAppInfo,
+    WebAppInfo, ReplyKeyboardMarkup, KeyboardButton,
 )
 
 from loader import settings
 
-inline_webapp_kb = InlineKeyboardMarkup(
-    inline_keyboard=[
+webapp_kb = ReplyKeyboardMarkup(
+    keyboard=[
         [
-            InlineKeyboardButton(
+            KeyboardButton(
                 text='Управление чатами',
                 web_app=WebAppInfo(url=settings.WEB_APP_URL),
             ),
         ],
     ],
+    resize_keyboard=True,
 )
