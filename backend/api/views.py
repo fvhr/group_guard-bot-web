@@ -134,7 +134,7 @@ class ChatViewSet(ModelViewSet):
     @action(['POST'], True, 'check-user', 'check-user-in-chat')
     def check_user_in_chat(self, request: Request, pk):
         if not models.User.objects.filter(id=request.data.get('id')):
-            serializer = self.serializer_class(data=request.data)
+            serializer = serializers.UserSerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
 
@@ -158,18 +158,35 @@ class ChatViewSet(ModelViewSet):
     )
     @action(['PATCH'], True, 'update-is-admin')
     def update_is_admin(self, request: Request, pk):
+        is_admin = request.data.get('is_admin', False)
         user_id = request.query_params.get('user_id', None)
         if user_id is None:
             return Response({'detail': 'user does not exists'})
 
-        models.UsersChats.objects.filter(user_id=user_id, chat_id=pk).update(
-            is_admin=request.data.get('is_admin', False)
-        )
+        instance = models.UsersChats.objects.filter(user_id=user_id, chat_id=pk)
+        if not instance:
+            serializer = serializers.UsersChatsSerializer(
+                data={'user': user_id, 'chat': pk, 'is_admin': is_admin},
+            )
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            return Response(serializer.data, 201)
 
-        data = serializers.UsersChatsSerializer(
-            instance=models.UsersChats.objects.get(user_id=user_id, chat_id=pk)
-        ).data
-        return Response(data, 200)
+        serializer = serializers.UsersChatsSerializer(
+            instance.get(),
+            data=request.data,
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        # models.UsersChats.objects.filter(user_id=user_id, chat_id=pk).update(
+        #     is_admin=request.data.get('is_admin', False)
+        # )
+        #
+        # data = serializers.UsersChatsSerializer(
+        #     instance=models.UsersChats.objects.get(user_id=user_id, chat_id=pk)
+        # ).data
+        return Response(serializer.data, 200)
 
     @swagger_auto_schema('DELETE', manual_parameters=[
         openapi.Parameter('user_id', openapi.IN_QUERY, type=openapi.TYPE_INTEGER)
