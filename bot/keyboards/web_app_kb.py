@@ -1,5 +1,7 @@
 from aiogram.types import (
-    WebAppInfo, ReplyKeyboardMarkup, KeyboardButton,
+    WebAppInfo,
+    ReplyKeyboardMarkup,
+    KeyboardButton,
 )
 
 from loader import settings
