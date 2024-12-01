@@ -16,7 +16,7 @@ type Props = {
   isLoading: boolean;
   onSearch: (query: string) => void;
   searchQuery: string;
-	countMembers: number
+  countMembers: number;
 };
 
 export const ChatListMembers: React.FC<Props> = ({
@@ -27,7 +27,7 @@ export const ChatListMembers: React.FC<Props> = ({
   loaders,
   onSearch,
   searchQuery,
-	countMembers
+  countMembers,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState<number | null>(null);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -39,7 +39,7 @@ export const ChatListMembers: React.FC<Props> = ({
   };
 
   const handleRemoveFromChat = () => {
-    setAlertMessage(`Удален из чата ${chatInfo?.title}`);
+    setAlertMessage(`Удален из чата`);
     setIsMenuOpen(null);
 
     setTimeout(() => {
@@ -59,8 +59,8 @@ export const ChatListMembers: React.FC<Props> = ({
   const handleCloseAlert = () => {
     setAlertMessage(null);
   };
-	console.log(alertMessage);
-	
+  console.log(members);
+
   return (
     <>
       {alertMessage && (
@@ -85,7 +85,14 @@ export const ChatListMembers: React.FC<Props> = ({
           <div className="members__back-text">Назад</div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-          <img src={chatInfo?.avatar_url} alt="Chat" />
+          {chatInfo?.avatar_url.startsWith('f') ? (
+            <div className="members__chat-default">
+              <span>{chatInfo.title.charAt(0)}</span>
+            </div>
+          ) : (
+            <img src={chatInfo?.avatar_url} />
+          )}
+
           <div className="members__chat-image">
             <div>{chatInfo?.title}</div>
             <span>{countMembers} участников</span>
@@ -115,7 +122,7 @@ export const ChatListMembers: React.FC<Props> = ({
             key={member.user.id}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <div className="members__avatar">
-                {member.user.photo_url.startsWith('https') ? (
+                {member.user.photo_url !== null ? (
                   <img src={member.user.photo_url} />
                 ) : (
                   <img src={circleSvg} alt="Дефолт картинка" />

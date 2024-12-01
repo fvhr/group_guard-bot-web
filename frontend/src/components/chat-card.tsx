@@ -13,7 +13,13 @@ export const ChatCard: React.FC<IChatCardProps> = ({ id, chatName, description, 
   return (
     <div onClick={() => navigate(`/chats-member/${id}`)} className="chat-card">
       <div className="chat-card__image">
-        <img src={imageUrl} alt={chatName} />
+        {imageUrl.startsWith('f') ? (
+          <div className="chat-card__default">
+            <span>{chatName.charAt(0)}</span>
+          </div>
+        ) : (
+          <img src={imageUrl} alt={chatName} />
+        )}
       </div>
       <div className="chat-card__content">
         <p className="chat-card__chat-name">{chatName}</p>
