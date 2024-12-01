@@ -78,11 +78,8 @@ class ChatViewSet(ModelViewSet):
     def users_search(self, request: Request, pk):
         query = request.query_params.get('q', None)
         if not query:
-            users = serializers.UserSerializer(
-                models.User.objects.filter(chats__chat_id=pk), many=True
-            ).data
             data = serializers.UsersChatsWithUserSerializer(
-                models.UsersChats.objects.filter(user__in=users),
+                models.UsersChats.objects.filter(chat_id=pk),
                 many=True
             ).data
             return Response(data, 200)
@@ -98,9 +95,9 @@ class ChatViewSet(ModelViewSet):
 
         users = models.User.objects.annotate(
             search=vector, rank=rank
-        ).filter(search=query, chats__chat_id=pk).order_by('-rank')
+        ).filter(chats__chat_id=pk, search=query).order_by('-rank')
         data = serializers.UsersChatsWithUserSerializer(
-            models.UsersChats.objects.filter(user__in=users),
+            models.UsersChats.objects.filter(user_id__in=users, chat_id=pk),
             many=True
         ).data
         return Response(data, 200)
