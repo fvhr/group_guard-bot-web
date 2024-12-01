@@ -130,3 +130,21 @@ class InteractionBackendAPI:
         async with aiohttp.ClientSession() as session:
             async with session.post(endpoint, data=user) as response:
                 logging.info(f'post from {endpoint}: {response.status}')
+
+    @classmethod
+    async def member_chat(cls, user_id: int) -> list:
+        endpoint = f'{cls.BASE_URL}/users/{user_id}/member-chats/'
+        async with aiohttp.ClientSession() as session:
+            async with session.get(endpoint) as response:
+                logging.info(f'get from {endpoint}: {response.status}')
+                js = await response.json()
+                return js
+
+    @classmethod
+    async def user_is_staff(cls, user_id: int) -> bool:
+        endpoint = f'{cls.BASE_URL}/users/{user_id}/'
+        async with aiohttp.ClientSession() as session:
+            async with session.get(endpoint) as response:
+                js = await response.json()
+                logging.info(f'get from {endpoint}: {response.status}')
+                return js['is_staff']
