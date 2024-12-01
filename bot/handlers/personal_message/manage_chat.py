@@ -18,7 +18,3 @@ async def manage_chat(call: types.CallbackQuery):
         )
     else:
         await call.message.answer(message_send, parse_mode='HTML')
-
-    # response = await InteractionBackendAPI.get_users_chat(chat_id)
-    # no_admins_users = list(filter(lambda x: not x['is_admin'], response))
-    # print(no_admins_users)
