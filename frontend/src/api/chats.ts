@@ -19,7 +19,7 @@ export const getUsersChat = async (id: string): Promise<Member[]> => {
 
 export const searchChatMembers = async (id: string, query: string): Promise<Member[]> => {
   const response = await axiosInstanсe.get<Member[]>(`/chats/${id}/users/search`, {
-    params: { q: query},
+    params: { q: query },
   });
   return response.data;
 };
