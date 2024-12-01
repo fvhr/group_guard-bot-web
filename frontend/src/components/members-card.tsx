@@ -2,38 +2,55 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import circleSvg from '../assets/circle-user.svg';
 import tg from '../assets/tg.png';
+import { ChatType } from '../types/chat';
 import { Member } from '../types/members';
 import { MenuMembers } from './members-menu';
 
 type Props = {
   member: Member;
-  setAlertMessage: (string: string | null) => void;
+  setAlertMessage: (message: string | null) => void;
+  chatInfo: ChatType | undefined;
 };
 
-export const MemberCard = ({ member, setAlertMessage }: Props) => {
+export const MemberCard = ({ member, setAlertMessage, chatInfo }: Props) => {
   const [isMenuOpen, setIsMenuOpen] = useState<number | null>(null);
 
   const toggleMenu = (id: number) => {
     setIsMenuOpen(isMenuOpen === id ? null : id);
   };
 
-  const handleRemoveFromChat = () => {
-    setAlertMessage(`Удален из чата`);
-    setIsMenuOpen(null);
+  const handleRemoveFromChat = (userId: number, chatId: number | 'all') => {
+    if (!chatInfo && chatId !== 'all') {
+      setAlertMessage('Ошибка: информация о чате недоступна');
+      return;
+    }
 
-    setTimeout(() => {
-      setAlertMessage(null);
-    }, 1000);
+    const dataToSend = {
+      action: 'remove_member',
+      user_id: userId,
+      chat_id: chatId,
+    };
+
+    try {
+      const tg = window.Telegram.WebApp;
+      tg.sendData(JSON.stringify(dataToSend)); 
+
+      setAlertMessage(
+        chatId === 'all'
+          ? `Пользователь удалён из всех чатов`
+          : `Пользователь удалён из чата с ID ${chatId}`,
+      );
+    } catch  {
+      setAlertMessage('Не удалось удалить пользователя. Попробуйте снова.');
+    } finally {
+      setIsMenuOpen(null);
+
+      setTimeout(() => {
+        setAlertMessage(null);
+      }, 2000);
+    }
   };
 
-  const handleRemoveFromAllChats = () => {
-    setAlertMessage('Удален из всех чатов');
-    setIsMenuOpen(null);
-
-    setTimeout(() => {
-      setAlertMessage(null);
-    }, 2000);
-  };
   return (
     <div
       onClick={() => toggleMenu(member.user.id)}
@@ -43,7 +60,7 @@ export const MemberCard = ({ member, setAlertMessage }: Props) => {
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <div className="members__avatar">
           {member.user.photo_url !== null ? (
-            <img src={member.user.photo_url} />
+            <img src={member.user.photo_url} alt="Фото пользователя" />
           ) : (
             <img src={circleSvg} alt="Дефолт картинка" />
           )}
@@ -51,7 +68,7 @@ export const MemberCard = ({ member, setAlertMessage }: Props) => {
         <div className="members__data">
           <div className="members__name">
             {member.user.first_name}
-            {member.user.is_premium && <img src={tg} alt="" />}
+            {member.user.is_premium && <img src={tg} alt="Премиум значок" />}
           </div>
           <Link to={`https://t.me/${member.user.username}`}>
             <span className="members__username">@{member.user.username}</span>
@@ -62,8 +79,10 @@ export const MemberCard = ({ member, setAlertMessage }: Props) => {
 
       {isMenuOpen === member.user.id && !member.is_admin && (
         <MenuMembers
-          handleRemoveFromChat={handleRemoveFromChat}
-          handleRemoveFromAllChats={handleRemoveFromAllChats}
+          handleRemoveFromChat={() =>
+            handleRemoveFromChat(member.user.id, chatInfo?.id || 'all') 
+          }
+          handleRemoveFromAllChats={() => handleRemoveFromChat(member.user.id, 'all')} 
         />
       )}
     </div>
