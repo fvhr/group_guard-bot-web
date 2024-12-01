@@ -64,7 +64,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          cd bot && pip install -r backend/requirements/prod.txt
+          cd backend && pip install -r requirements/prod.txt
 
       - name: Set up Database
         run: |
