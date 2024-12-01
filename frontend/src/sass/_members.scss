@@ -3,12 +3,12 @@
   flex-direction: column;
   align-items: center;
 
-	&__error {
-		font-size: 1.5rem;
-		text-align: center;
+  &__error {
+    font-size: 1.5rem;
+    text-align: center;
     color: green;
-		margin-top: 40px;
-	}
+    margin-top: 40px;
+  }
 
   &__header {
     width: 100%;
@@ -56,52 +56,49 @@
     }
   }
 
-	&__none {
-		text-align: center;
-		font-size: 1.3em;
-		color: rgb(169, 169, 169);
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-	}
+  &__none {
+    text-align: center;
+    font-size: 1.3em;
+    color: rgb(169, 169, 169);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 
-	&__inputs {
-		width: 100%;
-		max-width: 700px;
-		height: 50px;
-		padding: 0 20px;
-		margin-top: 30px;
-		position: relative;
+  &__inputs {
+    width: 100%;
+    max-width: 700px;
+    height: 50px;
+    padding: 0 20px;
+    margin-top: 30px;
+    position: relative;
 
-		svg {
-			stroke: rgb(169, 169, 169);
-			position: absolute;
-			top: 13.5px;
-			left: 35px;
-		}
+    svg {
+      stroke: rgb(169, 169, 169);
+      position: absolute;
+      top: 13.5px;
+      left: 35px;
+    }
 
-		input {
-			width: 100%;
-			background-color: #192540;
-			border-radius: 8px;
-			height: 100%;
-			padding-left: 50px;
-			font-size: 1.15rem;
-			color: white;
+    input {
+      width: 100%;
+      background-color: #192540;
+      border-radius: 8px;
+      height: 100%;
+      padding-left: 50px;
+      font-size: 1.15rem;
+      color: white;
 
-			
+      &::placeholder {
+        font-size: 1.05rem;
+        color: rgb(169, 169, 169);
+      }
 
-			&::placeholder {
-				font-size: 1.05rem;
-				color: rgb(169, 169, 169);
-			}
-
-			&:focus {
-				border: 1px solid rgb(169, 169, 169);
-			}
-		}
-		
-	}
+      &:focus {
+        border: 1px solid rgb(169, 169, 169);
+      }
+    }
+  }
 
   &__list {
     width: 100%;
@@ -159,13 +156,13 @@
         font-size: 1.2rem;
         font-weight: 600;
         color: white;
-				display: flex;
-				gap: 2px;
+        display: flex;
+        gap: 2px;
 
-				img {
-					width: 30px;
-					height: 30px;
-				}
+        img {
+          width: 30px;
+          height: 30px;
+        }
       }
 
       a {
@@ -261,9 +258,9 @@
       font-size: 1.2rem;
     }
 
-		&__data {
-			margin-left: 7px;
-		}
+    &__data {
+      margin-left: 7px;
+    }
 
     &__chat-image {
       display: flex;
@@ -274,7 +271,6 @@
       div {
         font-size: 1.2rem;
       }
-
 
       span {
         color: #b8b8b8;
