@@ -49,8 +49,14 @@
     div {
       font-size: 1.6rem;
       font-weight: 600;
-			max-width: 150px;
+			
     }
+
+		@media (max-width: 560px) {
+			div {
+				max-width: 150px;
+			}
+		}
 
     span {
       color: #b8b8b8;
