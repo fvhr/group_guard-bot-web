@@ -19,7 +19,7 @@ export const MembersSearch: React.FC<Props> = ({ onSearch, searchTerm }) => {
         type="text"
         maxLength={20}
         value={searchTerm}
-        onChange={handleChange} 
+        onChange={handleChange}
       />
     </div>
   );

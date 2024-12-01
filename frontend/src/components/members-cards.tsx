@@ -89,7 +89,12 @@ export const ChatListMembers: React.FC<Props> = ({
           </div>
         )}
         {members.map((member) => (
-          <MemberCard key={member.user.id} chatInfo={chatInfo} member={member} setAlertMessage={setAlertMessage} />
+          <MemberCard
+            key={member.user.id}
+            chatInfo={chatInfo}
+            member={member}
+            setAlertMessage={setAlertMessage}
+          />
         ))}
       </div>
     </>

@@ -14,7 +14,7 @@ export const AlertComponent = ({ handleCloseAlert, alertMessage }: Props) => {
       onClose={handleCloseAlert}
       style={{
         position: 'fixed',
-				width: '295px',
+        width: '295px',
         bottom: '50px',
         left: '50%',
         transform: 'translateX(-50%)',

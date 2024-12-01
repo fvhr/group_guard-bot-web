@@ -34,23 +34,15 @@ export const MemberCard = ({ member, setAlertMessage, chatInfo }: Props) => {
     console.log(JSON.stringify(dataToSend));
 
     try {
-      // Проверка, доступен ли Telegram WebApp API
-      if (window.Telegram && window.Telegram.WebApp) {
-        const tg = window.Telegram.WebApp;
+      const tg = window.Telegram.WebApp;
 
-        // Отправка данных через Telegram WebApp API
-        tg.sendData(JSON.stringify(dataToSend));
+      tg.sendData(JSON.stringify(dataToSend));
 
-        // Уведомление о успешной отправке данных
-        setAlertMessage(
-          chatId === 'all'
-            ? `Пользователь удалён из всех чатов`
-            : `Пользователь удалён из чата с ID ${chatId}`,
-        );
-      } else {
-        console.error('Telegram WebApp API не доступен');
-        setAlertMessage('Telegram WebApp API не доступен');
-      }
+      setAlertMessage(
+        chatId === 'all'
+          ? `Пользователь удалён из всех чатов`
+          : `Пользователь удалён из чата с ID ${chatId}`,
+      );
     } catch (error) {
       console.error('Ошибка при отправке данных:', error);
       setAlertMessage('Не удалось отправить данные. Попробуйте снова.');
