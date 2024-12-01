@@ -15,27 +15,37 @@
 ![HTML](https://img.shields.io/badge/language-HTML-orange)
 
 ## ER диаграмма БД
-![ER диаграмма](https://github.com/fvhr/group_guard-bot-web/blob/main/backend/ER.png)
+![ER диаграмма](./backend/ER.png)
 
 ## Клонирование репозитория
 ```git clone https://github.com/fvhr/group_guard-bot-web```
 
-## Установка зависимостей (бэкенд)
-Ссылка на [README](https://github.com/fvhr/group_guard-bot-web/blob/main/backend/README.md)
-
-## Установка зависимостей (фронтенд)
-Ссылка на [README](https://github.com/fvhr/group_guard-bot-web/blob/main/frontend/README.md)
-
 ## Что умеет наш бот?
 Ссылка на [README](https://github.com/fvhr/group_guard-bot-web/blob/main/bot/README.md)
 
-## Подстановка секретных переменных в окружение
-BOT_TOKEN - токен вашего бота 
+## Создайте файл .\bot\.env
+```
+BOT_TOKEN=токен вашего бота
+ADMIN_TG_UUID=tg id пользователя кому отправлять уведомление о запуске бота
+BASE_AVATAR_PATH=базовый путь до автарки если её по каким то причинам не получилось взять
+BASE_API_TG_URL=https://api.telegram.org/file/bot
+BASE_API_BACKEND_URL=url api backend
+WEB_APP_URL=url на webapp
+```
 
-POSTGRES_DB - название базы данных
+## Создайте файл .\backend\.env
+```
+ALLOWED_HOSTS=127.0.0.1,0.0.0.0,localhost
+SECRET_KEY=секретный ключ django
 
-POSTGRES_USER - имя пользователя 
+POSTGRES_DB=название базы данных
+POSTGRES_USER=пользователь, который будет подключаться к базе
+POSTGRES_PASSWORD=пароль от базы данных
+```
 
-POSTGRES_PASSWORD - пароль 
+## Запуск
+`docker-compose up --build -d`
+Сайт будет запущен на localhost
 
-POSTGRES_HOST - хост
+## Посмотреть логи
+`docker-compose logs`
