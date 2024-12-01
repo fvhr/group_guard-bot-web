@@ -32,16 +32,24 @@ export const MemberCard = ({ member, setAlertMessage, chatInfo }: Props) => {
     };
 
     try {
-      const tg = window.Telegram.WebApp;
-      tg.sendData(JSON.stringify(dataToSend)); 
+      // Проверка, доступен ли Telegram WebApp API
+      if (window.Telegram && window.Telegram.WebApp) {
+        const tg = window.Telegram.WebApp;
+        console.log('Отправка данных в Telegram Web App...');
+        tg.sendData(JSON.stringify(dataToSend)); // Отправка данных
 
-      setAlertMessage(
-        chatId === 'all'
-          ? `Пользователь удалён из всех чатов`
-          : `Пользователь удалён из чата с ID ${chatId}`,
-      );
-    } catch  {
-      setAlertMessage('Не удалось удалить пользователя. Попробуйте снова.');
+        setAlertMessage(
+          chatId === 'all'
+            ? `Пользователь удалён из всех чатов`
+            : `Пользователь удалён из чата с ID ${chatId}`
+        );
+      } else {
+        console.error('Telegram WebApp API не доступен');
+        setAlertMessage('Telegram WebApp API не доступен');
+      }
+    } catch (error) {
+      console.error('Ошибка при отправке данных:', error);
+      setAlertMessage('Не удалось отправить данные. Попробуйте снова.');
     } finally {
       setIsMenuOpen(null);
 
@@ -56,7 +64,8 @@ export const MemberCard = ({ member, setAlertMessage, chatInfo }: Props) => {
       onClick={() => toggleMenu(member.user.id)}
       className={`members__item ${!member.is_admin ? 'members__item-active' : ''}`}
       style={{ cursor: member.is_admin ? 'default' : 'pointer' }}
-      key={member.user.id}>
+      key={member.user.id}
+    >
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <div className="members__avatar">
           {member.user.photo_url !== null ? (
@@ -80,9 +89,9 @@ export const MemberCard = ({ member, setAlertMessage, chatInfo }: Props) => {
       {isMenuOpen === member.user.id && !member.is_admin && (
         <MenuMembers
           handleRemoveFromChat={() =>
-            handleRemoveFromChat(member.user.id, chatInfo?.id || 'all') 
+            handleRemoveFromChat(member.user.id, chatInfo?.id || 'all')
           }
-          handleRemoveFromAllChats={() => handleRemoveFromChat(member.user.id, 'all')} 
+          handleRemoveFromAllChats={() => handleRemoveFromChat(member.user.id, 'all')}
         />
       )}
     </div>
