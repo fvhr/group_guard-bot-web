@@ -49,16 +49,21 @@ class ManageBotAction:
     @staticmethod
     async def give_bot_admin_rights(chat: Chat) -> None:
         admin_info = await AdminInfo.from_chat(chat)
-        chat_invite_link = await chat.export_invite_link()
+        try:
+            chat_invite_link = await chat.export_invite_link()
+        except Exception:
+            chat_invite_link = None
         for admin in admin_info.admins:
             user = await bot.get_chat_member(chat_id=chat.id, user_id=admin)
-            if not await InteractionBackendAPI.exist_user(user.user.id):
-                await InteractionBackendAPI.user_create(dict(user.user))
-            await InteractionBackendAPI.change_admin_status(
-                chat.id,
-                user.user.id,
-                is_admin=True,
-            )
+            if not user.user.is_bot:
+                if not await InteractionBackendAPI.exist_user(user.user.id):
+                    await InteractionBackendAPI.user_create(dict(user.user))
+                print(user.user)
+                await InteractionBackendAPI.change_admin_status(
+                    chat.id,
+                    user.user.id,
+                    is_admin=True,
+                )
         await InteractionBackendAPI.chats_patch(
             chat.id,
             fields={

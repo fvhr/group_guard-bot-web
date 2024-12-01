@@ -64,10 +64,13 @@ class InteractionBackendAPI:
                 logging.info(f'post from {endpoint}: {response.status}')
 
     @classmethod
-    async def users_delete(cls, user_id: int) -> None:
-        endpoint = f'{cls.BASE_URL}/users/{user_id}/'
+    async def delete_users_chats(cls, user_id: int, chat_id: int) -> None:
+        endpoint = f'{cls.BASE_URL}/chats/{chat_id}/delete-user/'
         async with aiohttp.ClientSession() as session:
-            async with session.delete(endpoint) as response:
+            async with session.delete(
+                endpoint,
+                params={'user_id': user_id},
+            ) as response:
                 logging.info(f'delet from {endpoint}: {response.status}')
 
     @classmethod
@@ -120,3 +123,10 @@ class InteractionBackendAPI:
             async with session.get(endpoint) as response:
                 logging.info(f'get from {endpoint}: {response.status}')
                 return await response.json()
+
+    @classmethod
+    async def check_user(cls, user: dict, chat_id: int) -> None:
+        endpoint = f'{cls.BASE_URL}/chats/{chat_id}/check-user/'
+        async with aiohttp.ClientSession() as session:
+            async with session.post(endpoint, data=user) as response:
+                logging.info(f'post from {endpoint}: {response.status}')
