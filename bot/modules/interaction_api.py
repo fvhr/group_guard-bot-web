@@ -67,7 +67,10 @@ class InteractionBackendAPI:
     async def delete_users_chats(cls, user_id: int, chat_id: int) -> None:
         endpoint = f'{cls.BASE_URL}/chats/{chat_id}/delete-user/'
         async with aiohttp.ClientSession() as session:
-            async with session.delete(endpoint, params={'user_id': user_id}) as response:
+            async with session.delete(
+                endpoint,
+                params={'user_id': user_id},
+            ) as response:
                 logging.info(f'delet from {endpoint}: {response.status}')
 
     @classmethod

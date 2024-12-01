@@ -1,7 +1,10 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
-async def create_delete_member_ikb(members: list, chat_id: str) -> InlineKeyboardMarkup:
+async def create_delete_member_ikb(
+    members: list,
+    chat_id: str,
+) -> InlineKeyboardMarkup:
     ikb = InlineKeyboardMarkup()
     row = []
     for index, member in enumerate(members, start=1):
@@ -14,14 +17,18 @@ async def create_delete_member_ikb(members: list, chat_id: str) -> InlineKeyboar
         if len(row) == 2 or index == len(members):
             ikb.row(*row)
             row = []
-    ikb.add(InlineKeyboardButton(
-        text='Username нет в списке❌🔎',
-        callback_data=f'not_found_{chat_id}',
-    ))
-    ikb.add(InlineKeyboardButton(
-        text='⬅️Назад',
-        callback_data=f'return_{chat_id}',
-    ))
+    ikb.add(
+        InlineKeyboardButton(
+            text='Username нет в списке❌🔎',
+            callback_data=f'not_found_{chat_id}',
+        ),
+    )
+    ikb.add(
+        InlineKeyboardButton(
+            text='⬅️Назад',
+            callback_data=f'return_{chat_id}',
+        ),
+    )
 
     return ikb
 

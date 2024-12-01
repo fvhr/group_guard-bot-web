@@ -1,7 +1,7 @@
 from aiogram import types
 
 from filters.bot_actions_filters import GroupCustomFilters
-from loader import dp, bot
+from loader import dp
 from modules import ManageBotAction
 
 

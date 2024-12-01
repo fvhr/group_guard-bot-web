@@ -4,7 +4,6 @@ from aiogram.dispatcher import FSMContext
 from handlers.personal_message.utils import get_chat_info
 from keyboards.inlines import create_manage_chat_ikb
 from loader import dp, bot
-from states.change_group import ChangeGroup
 from states.delete_member import DeleteMember
 
 
