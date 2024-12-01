@@ -39,6 +39,17 @@ class UsersChatsSerializer(ModelSerializer):
         model = models.UsersChats
         fields = '__all__'
 
+    def create(self, validated_data: dict):
+        is_admin = validated_data.pop('is_admin', False)
+        try:
+            obj = models.UsersChats.objects.get(**validated_data)
+            obj.is_admin = is_admin
+            obj.save()
+            return obj
+        except models.UsersChats.DoesNotExist:
+            validated_data.setdefault('is_admin', is_admin)
+            return models.UsersChats.objects.create(**validated_data)
+
 
 class UsersChatsWithUserSerializer(ModelSerializer):
     user = UserSerializer()

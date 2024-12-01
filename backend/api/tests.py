@@ -82,3 +82,39 @@ class APITestCase(TestCase):
         UsersChats.objects.create(user=self.user2, chat=self.chat1)
         rsp = self.client.get(f'{self.url}chats/-1/users/search/?q=u1')
         print(rsp.data)
+
+    def test_users_chats_create(self):
+        is_admin1, is_admin2, is_admin3 = False, True, True
+
+        rsp1 = self.client.post(
+            f'{self.url}users-chats/',
+            {
+                'user': self.user1.id,
+                'chat': self.chat1.id,
+                'is_admin': is_admin1,
+            },
+        )
+        self.assertEqual(rsp1.data['is_admin'], is_admin1)
+
+        rsp2 = self.client.post(
+            f'{self.url}users-chats/',
+            {
+                'user': self.user1.id,
+                'chat': self.chat1.id,
+                'is_admin': is_admin2,
+            },
+        )
+        self.assertEqual(rsp2.data['is_admin'], is_admin2)
+
+        rsp3 = self.client.post(
+            f'{self.url}users-chats/',
+            {
+                'user': self.user2.id,
+                'chat': self.chat1.id,
+                'is_admin': is_admin3,
+            },
+        )
+        self.assertEqual(rsp3.data['is_admin'], is_admin3)
+
+        self.assertEqual(rsp1.data['id'], rsp2.data['id'])
+        self.assertNotEqual(rsp2.data['id'], rsp3.data['id'])
