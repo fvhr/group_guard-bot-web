@@ -36,6 +36,20 @@ class UserViewSet(ModelViewSet):
         chats = serializers.ChatSerializer(instance=chats, many=True).data
         return Response(chats, 200)
 
+    @action(['GET'], True, 'member-chats', 'user-member-chats')
+    def member_chats(self, request: Request, pk: int):
+        try:
+            pk = int(pk)
+        except ValueError:
+            return Response({'detail': 'user does not exists'}, 404)
+
+        chats = models.UsersChats.objects.filter(
+            user_id=pk, is_admin=False
+        ).values_list('chat', flat=True)
+        chats = models.Chat.objects.filter(id__in=chats, bot_is_admin=True)
+        chats = serializers.ChatSerializer(instance=chats, many=True).data
+        return Response(chats, 200)
+
     @swagger_auto_schema(
         'POST',
         request_body=openapi.Schema(
