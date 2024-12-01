@@ -41,7 +41,7 @@ class UsersChatsSerializer(ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data: dict):
-        is_admin = validated_data.pop('is_admin', None)
+        is_admin = validated_data.pop('is_admin', False)
         try:
             obj = models.UsersChats.objects.get(**validated_data)
             obj.is_admin = is_admin
