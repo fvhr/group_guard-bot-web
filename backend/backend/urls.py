@@ -17,7 +17,7 @@ view = get_schema_view(
     Info("RND Soft API", "v1"),
     public=True,
     generator_class=CustomSchemaGenerator,
-    permission_classes=[AllowAny]
+    permission_classes=[AllowAny],
 )
 
 urlpatterns = [

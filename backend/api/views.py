@@ -1,4 +1,8 @@
-from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+from django.contrib.postgres.search import (
+    SearchQuery,
+    SearchRank,
+    SearchVector,
+)
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.request import Request
@@ -57,54 +61,66 @@ class ChatViewSet(ModelViewSet):
     queryset = models.Chat.objects.all()
     serializer_class = serializers.ChatSerializer
 
-    @swagger_auto_schema('GET', responses={
-        200: serializers.UsersChatsWithUserSerializer(many=True)
-    })
+    @swagger_auto_schema(
+        'GET',
+        responses={200: serializers.UsersChatsWithUserSerializer(many=True)},
+    )
     @action(['GET'], True, 'users', 'chat-users')
     def users(self, request: Request, pk: int):
-        users = models.UsersChats.objects.filter(chat_id=pk)\
-            .select_related('user')
+        users = models.UsersChats.objects.filter(chat_id=pk).select_related(
+            'user'
+        )
         users = serializers.UsersChatsWithUserSerializer(
             instance=users, many=True
         ).data
         return Response(users, 200)
 
-    @swagger_auto_schema('GET', manual_parameters=[
-        openapi.Parameter('q', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
-    ], responses={
-        200: serializers.UsersChatsWithUserSerializer(many=True)
-    })
+    @swagger_auto_schema(
+        'GET',
+        manual_parameters=[
+            openapi.Parameter(
+                'q', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING
+            )
+        ],
+        responses={200: serializers.UsersChatsWithUserSerializer(many=True)},
+    )
     @action(['GET'], True, 'users/search', 'users-search')
     def users_search(self, request: Request, pk):
         query = request.query_params.get('q', None)
         if not query:
             data = serializers.UsersChatsWithUserSerializer(
-                models.UsersChats.objects.filter(chat_id=pk),
-                many=True
+                models.UsersChats.objects.filter(chat_id=pk), many=True
             ).data
             return Response(data, 200)
 
         vector = (
-            SearchVector('first_name', weight='A') +
-            SearchVector('last_name', weight='A') +
-            SearchVector('username', weight='A')
+            SearchVector('first_name', weight='A')
+            + SearchVector('last_name', weight='A')
+            + SearchVector('username', weight='A')
         )
 
         query = SearchQuery(query)
         rank = SearchRank(vector, query)
 
-        users = models.User.objects.annotate(
-            search=vector, rank=rank
-        ).filter(chats__chat_id=pk, search=query).order_by('-rank')
+        users = (
+            models.User.objects.annotate(search=vector, rank=rank)
+            .filter(chats__chat_id=pk, search=query)
+            .order_by('-rank')
+        )
         data = serializers.UsersChatsWithUserSerializer(
             models.UsersChats.objects.filter(user_id__in=users, chat_id=pk),
-            many=True
+            many=True,
         ).data
         return Response(data, 200)
 
-    @swagger_auto_schema('GET', manual_parameters=[
-        openapi.Parameter('q', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
-    ])
+    @swagger_auto_schema(
+        'GET',
+        manual_parameters=[
+            openapi.Parameter(
+                'q', openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING
+            )
+        ],
+    )
     @action(['GET'], False, 'search', 'search')
     def search(self, request: Request):
         query = request.query_params.get('q', None)
@@ -114,19 +130,22 @@ class ChatViewSet(ModelViewSet):
             ).data
             return Response(data, 200)
 
-        vector = SearchVector('title', weight='A') + SearchVector('description', weight='B')
+        vector = SearchVector('title', weight='A') + SearchVector(
+            'description', weight='B'
+        )
         query = SearchQuery(query)
         rank = SearchRank(vector, query)
 
-        chats = models.Chat.objects.annotate(
-            search=vector, rank=rank
-        ).filter(search=query).order_by('-rank')
+        chats = (
+            models.Chat.objects.annotate(search=vector, rank=rank)
+            .filter(search=query)
+            .order_by('-rank')
+        )
         data = serializers.ChatSerializer(chats, many=True).data
         return Response(data, 200)
 
     @swagger_auto_schema(
-        'POST', request_body=serializers.UserSerializer(),
-        responses={204: ''}
+        'POST', request_body=serializers.UserSerializer(), responses={204: ''}
     )
     @action(['POST'], True, 'check-user', 'check-user-in-chat')
     def check_user_in_chat(self, request: Request, pk):
@@ -144,7 +163,10 @@ class ChatViewSet(ModelViewSet):
         'PATCH',
         manual_parameters=[
             openapi.Parameter(
-                'user_id', openapi.IN_QUERY, required=True, type=openapi.TYPE_INTEGER
+                'user_id',
+                openapi.IN_QUERY,
+                required=True,
+                type=openapi.TYPE_INTEGER,
             )
         ],
         request_body=openapi.Schema(
@@ -160,7 +182,9 @@ class ChatViewSet(ModelViewSet):
         if user_id is None:
             return Response({'detail': 'user does not exists'})
 
-        instance = models.UsersChats.objects.filter(user_id=user_id, chat_id=pk)
+        instance = models.UsersChats.objects.filter(
+            user_id=user_id, chat_id=pk
+        )
         if not instance:
             serializer = serializers.UsersChatsSerializer(
                 data={'user': user_id, 'chat': pk, 'is_admin': is_admin},
@@ -170,31 +194,25 @@ class ChatViewSet(ModelViewSet):
             return Response(serializer.data, 201)
 
         serializer = serializers.UsersChatsSerializer(
-            instance.get(),
-            data=request.data,
-            partial=True
+            instance.get(), data=request.data, partial=True
         )
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
-        # models.UsersChats.objects.filter(user_id=user_id, chat_id=pk).update(
-        #     is_admin=request.data.get('is_admin', False)
-        # )
-        #
-        # data = serializers.UsersChatsSerializer(
-        #     instance=models.UsersChats.objects.get(user_id=user_id, chat_id=pk)
-        # ).data
         return Response(serializer.data, 200)
 
-    @swagger_auto_schema('DELETE', manual_parameters=[
-        openapi.Parameter('user_id', openapi.IN_QUERY, type=openapi.TYPE_INTEGER)
-    ], responses={
-        204: ''
-    })
+    @swagger_auto_schema(
+        'DELETE',
+        manual_parameters=[
+            openapi.Parameter(
+                'user_id', openapi.IN_QUERY, type=openapi.TYPE_INTEGER
+            )
+        ],
+        responses={204: ''},
+    )
     @action(['DELETE'], True, 'delete-user', 'delete-user')
     def delete_user_from_chat(self, request: Request, pk):
         models.UsersChats.objects.filter(
-            user_id=request.query_params.get('user_id'),
-            chat_id=pk
+            user_id=request.query_params.get('user_id'), chat_id=pk
         ).delete()
         return Response(status=204)
 
